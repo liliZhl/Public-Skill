@@ -39,10 +39,15 @@ REPOS_ROOT = HOME / "repos"
 EDA_SECRETS = HOME / ".workbuddy" / "secrets" / "eda-host.json"
 EXTRA_SECRETS = HOME / ".workbuddy" / "secrets" / "sanitize-extra.json"
 
-# 本脚本文件名：同步与复查时跳过。
-# 它本身不含环境标识，但它描述若干"泛化模式"（形如 (?i)\\b<前缀>\\d{4}\\b），
+# 需要跳过替换的脚本文件名白名单（含自身）。
+# 它们不含环境标识，但描述若干“泛化模式”（形如 (?i)\b<三字母>\d{4}\b），
 # 不跳过的话这些模式字符串会被自己的规则改写，工具直接失效。
-SELF_SCRIPT = os.path.basename(__file__)
+# 新增同类脚本时**必须登记到这里**，否则会被自伤。
+SELF_SCRIPTS = {
+    os.path.basename(__file__),
+    "sync_skill_repos.py",
+    "scrub_git_history.py",
+}
 
 
 # ---------------------------------------------------------------------------
@@ -299,7 +304,7 @@ def main():
                     continue
                 replaced = 0
                 for p in iter_files(d):
-                    if p.name == SELF_SCRIPT:
+                    if p.name in SELF_SCRIPTS:
                         continue
                     try:
                         txt = p.read_text(encoding="utf-8")
@@ -321,7 +326,7 @@ def main():
             hits = 0
             for name in skills:
                 for p in iter_files(Path(repo_pub) / name):
-                    if p.name == SELF_SCRIPT:
+                    if p.name in SELF_SCRIPTS:
                         continue
                     try:
                         txt = p.read_text(encoding="utf-8")

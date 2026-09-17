@@ -148,10 +148,10 @@ git config --add remote.origin.fetch "+refs/heads/*:refs/origin/*"
 
 | 仓库 | 可见性 | 内容 |
 |---|---|---|
-| `<GH_LOGIN>/<USER>-Skill` | 私有 | 原样，不动一字 |
+| `<GH_LOGIN>/Private-Skill` | 私有 | 原样，不动一字 |
 | `<GH_LOGIN>/Public-Skill` | 公开 | 同一批技能，**已脱敏** |
 
-本地工作副本：`~/repos/<USER>-Skill`、`~/repos/Public-Skill`。
+本地工作副本：`~/repos/Private-Skill`、`~/repos/Public-Skill`。
 `~/.workbuddy/skills/` 是**运行时目录**，两个仓库都是它的镜像 —— 改技能要改源头，
 再同步过去提交。
 
@@ -178,11 +178,12 @@ python "$SC" --push     # 复查无残留时自动 commit + push
 
 两个必须知道的实现细节：
 
-- **脚本自身要跳过替换**。它里面写着"泛化模式"（如 `(?i)\b<ACCOUNT_PREFIX>\d{4}\b`、
+- **脚本自身要跳过替换**。它里面写着"泛化模式"（如 `(?i)\b[a-z]{3}\d{4}\b`、
   `[A-Z][A-Z0-9]{2,7}-PC`），不跳过就会被自己的规则改写，工具直接失效 ——
-  这是隐蔽的自伤，用文件名白名单规避。
+  这是隐蔽的自伤，用**文件名白名单**规避（`SELF_SCRIPTS`，多脚本要一起登记）。
+  泛化模式本身也要写成"通用形状"而非本公司实例，否则等于换个地方泄露命名规则。
 - **域 / 账号 / 主机名类规则必须大小写不敏感**。同一标识在文档里会写成
-  `<DOMAIN>` / `<DOMAIN>` / `<ACCOUNT>` / `<ACCOUNT>` 多种形态，区分大小写会漏一半。
+  全大写 / 全小写 / 首字母大写等多种形态，区分大小写会漏一半。
 
 脱敏要点（踩过的坑）：
 
@@ -388,3 +389,75 @@ git check-ignore -v mod/x/model.pt     # 命中 mod/* → 被忽略
 - [ ] `.gitignore` 防误提交规则已验证
 - [ ] 敏感信息扫描（个人路径 / 内网标识 / 凭据）无命中
 - [ ] 推送后**从远端读回**验证，不只看本地
+
+## 11. 敏感内容已经推到公开仓：历史改写补救
+
+触发场景：某个提交已经把真实环境标识（主机名 / 域 / 账号 / 内网 IP / 本机路径）
+推到了**公开仓库**。可能是手工推了原始文件，也可能是**脱敏工具自己漏掉的**
+（工具有"跳过自身"逻辑，写在它自己文件里的硬编码值会绕过脱敏直接进公开仓）。
+
+**先记住一条：再补一个"干净提交"没用。** 旧提交对象依然能按 SHA 取到完整内容。
+唯一出路是重写历史，工具已备好：
+
+```bash
+SC=~/.workbuddy/skills/github-control/scripts/scrub_git_history.py
+python "$SC" --repo ~/repos/Public-Skill              # 重写 + 清理 + 独立复查
+python "$SC" --repo ~/repos/Public-Skill --push       # 复查无残留才强推
+```
+
+它复用 `sync_skill_repos.py` 的 `build_rules()` 取规则（单一事实来源，脚本内无环境标识），
+逐提交重写工作树，替换为占位符，再清扫陈旧 ref、回收对象、反扫全部新提交。
+
+### 11.1 最大的坑：只删 reflog 和 gc 是不够的
+
+`git filter-branch` 会把旧提交挂在 `refs/original/*` 下；而如果本地配过
+**镜像 refspec**（`+refs/heads/*:refs/origin/*`，本机为绕开 `refs/remotes` 写入丢失
+问题加过），`refs/origin/*` 仍指向旧提交。
+
+> 实测：重写后 `git rev-list --all` 扫描显示"干净"，但 `git cat-file -e <旧sha>` 依然成功 ——
+> 因为旧提交还挂在 `refs/origin/main` 上。删掉该 ref、expire reflog、`gc --prune=now` 之后才真正消失。
+
+工具的判据很硬：**历史整体重写后，任何不是新 HEAD 祖先的 ref 都指向旧内容，一律删除。**
+删完必须用 `git cat-file -e <旧sha>` 逐个验证"已清除"，不要凭 `rev-list --all` 下结论。
+
+### 11.2 filter-branch 的 `--tree-filter` 参数顺序
+
+传给临时脱敏器的位置参数必须与脚本 `argv` 对齐：
+
+```
+"<python>" "<临时脚本>" . "<规则json>"
+```
+
+写成 `"<python>" "<临时脚本>" "<规则json>" .` 会让脚本把规则文件当工作树根、
+把 `.` 当规则文件读，报 `PermissionError: [Errno 13] Permission denied: '.'`。
+
+### 11.3 GitHub 侧：force push 清不掉旧对象
+
+**这是本工具的硬边界，必须主动告知用户。** GitHub 收到 force push 后不会立即回收，
+旧提交仍可通过 SHA 访问：
+
+```bash
+gh api repos/<owner>/<repo>/commits/<旧sha> --jq .sha     # 实测仍返回 sha
+gh api "repos/<owner>/<repo>/contents/<路径>?ref=<旧sha>" # 内容照样取得到
+```
+
+要做到零残留，只有两条路：
+
+1. **删库重建**（推荐）—— 仓库新建不久、无 fork / 无 star 时成本极低：
+   ```bash
+   gh repo delete <owner>/<repo> --yes
+   gh repo create <owner>/<repo> --public --source ~/repos/Public-Skill --push
+   ```
+2. 请 GitHub Support 清除缓存视图（慢，要发邮件）。
+
+判断依据：`gh api repos/<owner>/<repo> --jq '{forks_count,stargazers_count,created_at}'`。
+fork 数为 0 且创建时间很近 → 直接删库重建，别犹豫。
+
+> **撤不掉的部分要如实说**：如果泄露的是口令 / 令牌 / 私钥（不是标识符），
+> 无论怎么改写历史都必须**先轮换凭据**，把"撤历史"当额外动作而不是替代方案。
+
+### 11.4 预防：公开仓的每次 push 前都跑独立复查
+
+补救成本远高于预防。`sync_skill_repos.py` 的复查逻辑是**独立于替换规则**的
+（用原始词表反扫），这是能发现"工具自己漏了"的唯一手段 —— 别把它当成可跳过的步骤。
+新增任何同类脚本，记得登记进 `SELF_SCRIPTS` 白名单。
