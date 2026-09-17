@@ -195,3 +195,86 @@ grep -rniE "<本机用户名>|<域账号>|<主机名>|<内网IP>|<公司名>" . 
 - 对外可见的操作（建公开仓库、push 到公开仓）**先向用户确认**。
 - 凭据文件（`~/.workbuddy/secrets/`）绝不入库；两个仓库的 `.gitignore` 均已拦截，
   但**不要手工把 secrets 目录拷进仓库目录** —— 这是唯一兜不住的操作。
+
+## 9. 把本地既有仓库接入 GitHub（含敏感内容历史清理）
+
+场景：目录里**已经是带提交历史的本地仓库**，要推到 GitHub，同时**排除某些已入库的敏感内容**。
+光改当前文件不够 —— 内容在历史里，必须重写历史。
+
+### 9.1 网络路径 / 非本机盘的前提
+
+若仓库在 UNC 或映射盘（如 `Z:\` → `\\host\share`），git 会报 `dubious ownership`，
+需**按三种路径写法各登记一次**，否则换个写法就又被拦：
+
+```bash
+git config --global --add safe.directory "//host/share/<repo>"
+git config --global --add safe.directory "Z:/<repo>"
+git config --global --add safe.directory "Z:/<repo>/.git"   # clone 时 git 明确要求这条
+```
+
+且给 git 传路径**必须用 `Z:/...` 形式**，msys 的 `/z/...` 会报 `repository does not exist`。
+
+### 9.2 在副本上操作，源仓库不动
+
+```bash
+git clone "Z:/<repo>" "C:/Users/<user>/repos/<repo>"
+```
+
+> ⚠️ **沙箱会拦截 git 的仓库创建**：`git clone` / `git init` 报 exit 0，但产物在 `ls`
+> 与原生 Win32 API 里都看不到；更糟的是**残留的隔离层目录会污染后续操作**（再 clone 报
+> "already exists"，或报成功却依然不可见）。
+> → **凡涉及 `.git` 的写入，一律用非沙箱模式执行**，并先清空目标目录名。
+> → 判定真相要用**原生 API**，`ls`（msys 视图）不可信，详见 `references/local-env-notes.md` §9。
+
+### 9.3 重写历史
+
+```bash
+<venv>/Scripts/python.exe -m pip install git-filter-repo
+# 可执行：<venv>/Scripts/git-filter-repo.exe
+```
+
+```bash
+git filter-repo --force \
+  --path "docs/物料库文档" --invert-paths \
+  --replace-text expressions.txt
+```
+
+`expressions.txt` 每行 `原值==>占位符`：
+
+```
+<真实口令>==><SAP_PASSWORD>
+<账号>==><SAP_USER>
+<服务器>==><SAP_SERVER>
+```
+
+- filter-repo **会移除 origin remote**（因为它指向源仓库），之后需重新 `git remote add`
+- 末段 `repacking/cleaning` 会重算体积，数十秒属正常
+
+### 9.4 两个必踩的坑
+
+1. **重写后工作区检出可能不全** —— 实测 97 个 tracked 只写出 52 个，
+   `git status` 冒出几十个 ` D`。**此时 `git add -A` 会把这些"删除"提交上去。**
+   - 提交前**必须**核对：`git status --porcelain | grep '^ D'` 应为空
+   - 恢复：`git checkout <filter-repo 后的提交> -- <路径>`
+2. **核验中文路径必须加 `-c core.quotepath=false`** —— 否则
+   `git ls-files | grep <中文名>` 恒为 0，看着干净其实根本没验证到。
+
+### 9.5 推送前核验
+
+```bash
+git -c core.quotepath=false log --all --name-only --pretty=format: | grep -c "<被排除路径>"
+git log --all -S"<凭据原值>" --oneline | wc -l      # 都应为 0
+```
+
+同时在仓库 README 写明**排除了什么、怎么本地恢复**，并把被排除路径补进 `.gitignore`。
+
+### 9.6 远端实测（不要只看本地）
+
+```bash
+gh api repos/<owner>/<repo>/git/trees/<branch>?recursive=1 \
+  --jq '.tree[]|select(.type=="blob")|.path' | grep -c "<被排除路径>"    # 应为 0
+gh api repos/<owner>/<repo>/contents/config.ini.example \
+  -H "Accept: application/vnd.github.raw"                                # 直接读原文，验占位符
+gh api repos/<owner>/<repo>/git/trees/<branch>?recursive=1 \
+  --jq '[.tree[]|select(.type=="blob")]|length'                          # 与本地 tracked 数比对
+```

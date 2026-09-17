@@ -162,7 +162,66 @@ signing in to" 指的就是本机 CLI —— 手机不会弹码。
 
 ---
 
-## 8. 其他
+## 8. 网络路径 / 映射盘：需要三层 `safe.directory`
+
+**症状**：`fatal: detected dubious ownership in repository at '//host/share/repo'`，
+并提示 `may refer to a non-local directory`。
+
+**根因**：git 2.35+ 的所有权校验。UNC 路径下 SID 与本地账户对不上即判定可疑。
+
+**绕行**：**同一个仓库要按三种路径写法各登记一次**，否则换个写法就又被拦：
+
+```bash
+git config --global --add safe.directory "//<HOSTNAME>/<SHARE>/<repo>"
+git config --global --add safe.directory "Z:/<repo>"
+git config --global --add safe.directory "Z:/<repo>/.git"   # clone 时 git 明确点名这条
+```
+
+**相关坑**：给 git 传路径**必须用 `Z:/...` 或 `C:/...`**。传 msys 的
+`/z/Meeting` 会报 `repository '/z/Meeting' does not exist`（git 是原生程序，不认 msys 路径）。
+而 `git -C /c/Users/...` 却能正常工作 —— 两者行为不一致，别想当然。
+
+---
+
+## 9. filter-repo 重写历史后，工作区检出不全
+
+**症状**：`git filter-repo` 跑完（输出 "Completely finished"），
+但 `git status` 冒出几十个 ` D`（deleted），而 `git ls-tree -r HEAD` 里这些文件都在。
+
+**实测**：97 个 tracked 文件，filter-repo 后工作区只写出 52 个，缺 39 个。
+
+**危险点**：此时 `git add -A` 会把这批"删除"当成真实改动提交并推送出去。
+**跑过 filter-repo 之后，提交前必须核对**：
+
+```bash
+git status --porcelain | grep '^ D'    # 应为空
+```
+
+**恢复**（内容都在对象库里，不会丢）：
+
+```bash
+git checkout <filter-repo 后的提交> -- <路径>
+# 例：git checkout HEAD~1 -- docs/
+```
+
+**核验中文路径必须加 `-c core.quotepath=false`** —— 否则
+`git ls-files | grep <中文名>` 恒为 0，看着"干净"实则根本没验证到：
+
+```bash
+git -c core.quotepath=false ls-files | grep "物料库"
+git -c core.quotepath=false log --all --name-only --pretty=format: | grep -c "物料库"
+```
+
+**其他 filter-repo 注意点**：
+
+- 它会**移除 origin remote**（因为 origin 通常指向被重写的源仓库），之后要重新 `git remote add`
+- 末段 `repacking/cleaning` 会重算体积，数十秒属正常
+- 安装：`<venv>/Scripts/python.exe -m pip install git-filter-repo`，
+  可执行文件落在 `<venv>/Scripts/git-filter-repo.exe`
+
+---
+
+## 10. 其他
 
 - `winget` 可用（v1.29.290）；无系统级 Git，只有 PortableGit
 - `git-credential-manager` 内置但未启用 —— 走 gh 的 helper 即可，无需另配
