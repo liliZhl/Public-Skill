@@ -186,6 +186,11 @@ def main():
     ap.add_argument("--replace", action="append", metavar="OLD==>NEW",
                     help="定向字面量替换，可重复。用于仓库本身的公开名要保留、"
                          "只需清掉个别值的场景")
+    ap.add_argument("--no-skip-scripts", action="store_true",
+                    help="连 SELF_SCRIPTS 白名单里的脚本一起脱敏。默认跳过它们"
+                         "是为了防止工具自身的'泛化模式'被规则改写；但当真实指纹"
+                         "就写在脚本里时（如命名规则正则），必须打开本开关，"
+                         "否则脚本会整文件被跳过、指纹留在历史里")
     args = ap.parse_args()
 
     repo = Path(args.repo).expanduser().resolve()
@@ -247,7 +252,10 @@ def main():
     scrub_py = tmp / "_tree_scrub.py"
     rules_json = tmp / "rules.json"
     scrub_py.write_text(TREE_SCRUBBER, encoding="utf-8")
-    skip_names = getattr(mod, "SELF_SCRIPTS", {Path(SYNC_TOOL).name})
+    skip_names = set(getattr(mod, "SELF_SCRIPTS", {Path(SYNC_TOOL).name}))
+    if args.no_skip_scripts:
+        skip_names = set()
+        print("注意：已关闭脚本白名单跳过 —— 白名单内的脚本也会被脱敏")
     n = export_rules(rules, skip_names, rules_json)
     print("临时脱敏器: %s（导出 %d 条规则）" % (tmp, n))
 

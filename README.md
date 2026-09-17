@@ -8,7 +8,7 @@
 |---|---|
 | `eda-host-control` | 通过 SSH 驱动一台 Windows 主机：执行命令与 PowerShell、上传下载文件、读目录与日志、探测会话权限等级 |
 | `windows-lan-remote-access` | 排查并修复 Windows 局域网内「远程控制另一台电脑」失败的问题：ping 单向不通、RDP 凭据不工作、域账号(NetBIOS/UPN)登录名格式、主机侧远程桌面授权与防火墙、RDP 证书/资源重定向警告、无外网环境下第三方远控选型、EDA 类节点锁定许可与远程会话冲突 |
-| `github-control` | 在本机直接管理 GitHub：gh CLI 授权（设备码方向说明）、git 身份与凭据配置、仓库增删改、提交推送、Issue 与 PR、Actions 日志排查；附环境自检脚本与 Windows 平台故障绕行（PATH 未注入、`refs/remotes` 写入被丢弃、沙箱内 clone 不落地） |
+| `github-control` | 在本机直接管理 GitHub：gh CLI 授权（设备码方向说明）、git 身份与凭据配置、仓库增删改、提交推送、Issue 与 PR、Actions 日志排查；附环境自检、**转公开前的敏感信息体检**、**已推送内容的历史改写补救**与技能双仓同步工具，以及 Windows 平台故障绕行（PATH 未注入、`refs/remotes` 写入被丢弃、沙箱内 clone 不落地） |
 
 ## 占位符对照表（重要）
 
@@ -62,7 +62,10 @@
 │   │   ├── local-env-notes.md     # Windows 平台硬坑详解
 │   │   └── diagram.md             # 设备码授权方向图
 │   └── scripts/
-│       └── gh_env.py              # 环境自检（自动处理 PATH 注入）
+│       ├── gh_env.py              # 环境自检（自动处理 PATH 注入）
+│       ├── scan_sensitive.py      # 仓库转公开前的敏感信息体检
+│       ├── scrub_git_history.py   # 已推送敏感内容的历史改写补救
+│       └── sync_skill_repos.py    # 技能双仓同步（私有原样 / 公开脱敏）
 └── windows-lan-remote-access/
     └── SKILL.md
 ```
