@@ -155,7 +155,12 @@ def build_rules(repo_priv=None, repo_pub=None):
 
     def add(value, holder, flags=0, escape=True):
         v = (value or "").strip()
-        if not v or len(v) < 3:
+        # 短值守卫：1–2 个字符的 **ASCII** 串区分度太低，替换会误伤（两字母
+        # 缩写会命中任何单词内部）。但非 ASCII 文字不适用这条——中文一个字
+        # 就是一个完整语素，双字词已经足够 specific（实测某双字公司名被丢）。
+        # 踩过的坑：原先无条件写 len(v) < 3，把所有双字中文敏感词静默丢弃，
+        # 而复查阶段又用同一份 originals，于是"漏了"这件事从头到尾不可见。
+        if not v or (len(v) < 3 and v.isascii()):
             return
         rules.append((re.escape(v) if escape else v, holder, flags))
         originals.append(v)

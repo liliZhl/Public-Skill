@@ -25,6 +25,7 @@
 """
 
 import argparse
+import json
 import re
 import subprocess
 import sys
@@ -40,11 +41,30 @@ PATTERNS = [
     ("疑似 API Key", re.compile(r"\bsk-[A-Za-z0-9_\-]{10,}")),
     ("疑似手机号", re.compile(r"(?<!\d)1[3-9]\d{9}(?!\d)")),
     ("AI 工具目录", re.compile(r"\.(?:qclaw|claude|cursor|codebuddy)\b")),
-    ("公司名", re.compile(r"小湃|创维|Skyworth")),
     ("域账号样式", re.compile(r"(?i)\b[a-z]{3}\d{4}\b")),
     ("令牌/密码字面量", re.compile(
         r"(?i)(?:password|passwd|token|secret|api[_-]?key)\s*[:=]\s*[\"'][^\"'\s]{6,}[\"']")),
 ]
+
+
+def _extra_terms():
+    """从脱敏词表取本机特定词（公司名、项目号等）。
+
+    这些词**不能写死在本脚本里** —— 本脚本自身会进入公开仓库，
+    把公司名字面量放进来等于直接泄漏。词表在 secrets 目录，永不入库。
+    """
+    p = Path.home() / ".workbuddy" / "secrets" / "sanitize-extra.json"
+    try:
+        return sorted(json.loads(p.read_text(encoding="utf-8")).keys(),
+                      key=len, reverse=True)
+    except Exception:
+        return []
+
+
+_extra = _extra_terms()
+if _extra:
+    PATTERNS.append(("脱敏词表命中（本机特定词）",
+                     re.compile("|".join(re.escape(t) for t in _extra))))
 
 
 def git(repo, *args):
