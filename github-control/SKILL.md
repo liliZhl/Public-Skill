@@ -120,6 +120,9 @@ export PATH="/c/Program Files/GitHub CLI:/c/Users/<USER>/.workbuddy/binaries/Por
 只用 gh / 只用 git 时可各自裁短。缺了 `cmd/` 目录会找不到 git.exe，缺了
 `usr/bin/` 则 shell 内建工具（rm/mkdir）全失。
 
+> **上面的版本段（`1.2.0`）会随升级变化，不要照抄。** 以 `gh_env.py` 输出的
+> `PATH 导出` 行为准 —— 它是 glob 探测出来的实时值。
+
 ## 6. 本机硬坑速查
 
 | 症状 | 根因 | 处理 |
