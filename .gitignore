@@ -1,0 +1,19 @@
+# 凭据 —— 绝不能入库
+secrets/
+*.secret
+*credentials*
+*.pem
+*.key
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# 系统与编辑器
+.DS_Store
+Thumbs.db
+*.swp
+.vscode/
+.idea/
