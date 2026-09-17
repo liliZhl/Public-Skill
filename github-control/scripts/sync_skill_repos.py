@@ -188,6 +188,15 @@ def build_rules(repo_priv=None, repo_pub=None):
     add(ssh_user, "<ACCOUNT>", flags=re.I)                       # 域\账号 整体（更长，先换）
     if "\\" in ssh_user:
         add(ssh_user.split("\\")[-1], "<ACCOUNT>", flags=re.I)   # 单独出现的账号部分
+
+    # 账号的**字母前缀**单独出现时也要拦。整账号规则管不到它：
+    # 文档里若写「账号形如 <前缀>0422」，域名那段被别的规则吃掉后，
+    # 孤立的字母前缀没有任何规则匹配，会直接漏进公开仓库（实测踩过）。
+    # 前缀从账号值切出来，仍然零硬编码。
+    acct = ssh_user.split("\\")[-1] if ssh_user else ""
+    m_acct = re.match(r"^([A-Za-z]{2,6})\d{3,6}$", acct)
+    if m_acct:
+        add(m_acct.group(1), "<ACCOUNT>", flags=re.I)
     add(sec.get("host"), "<HOST_IP>")
     for key in ("unc_admin_share", "unc_data_share", "business_share"):
         add(sec.get(key), "<SHARE>")
