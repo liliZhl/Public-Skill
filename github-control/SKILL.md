@@ -537,4 +537,56 @@ fork 数为 0 且创建时间很近 → 直接删库重建，别犹豫。
 
 补救成本远高于预防。`sync_skill_repos.py` 的复查逻辑是**独立于替换规则**的
 （用原始词表反扫），这是能发现"工具自己漏了"的唯一手段 —— 别把它当成可跳过的步骤。
-新增任何同类脚本，记得登记进 `SELF_SCRIPTS` 白名单。
+新增任何同类脚本，记得登记进 `SELF_SCRIPTS` 白名单（但要留意 11.5 的反作用）。
+
+### 11.5 脚本白名单会挡住定向清理（实测踩过）
+
+`SELF_SCRIPTS` 的初衷是防止工具自身的"泛化模式"被规则改写。但它按**文件名整文件跳过**，
+所以当真实指纹就写在脚本里时（典型形态：文档/脚本里引用的**公司命名规则正则**，
+`(?i)\b<三字母前缀>\d{4}\b` 这种），这些脚本会被整文件跳过。更隐蔽的是——
+复查也跳过同一批文件，于是**报"无残留"，但 `grep` 还能搜到**。
+
+```bash
+# 指纹在脚本里 → 必须关掉跳过
+python scripts/scrub_git_history.py --repo <路径> --no-skip-scripts
+```
+
+判断标准：**指纹落在脚本正文里就打开**；纯粹是担心工具自伤就保持默认。
+脱敏后不要只信工具自带的复查，自己再扫一遍：
+
+```bash
+cd <repo> && git grep -niE "<指纹形状>" $(git rev-list --all)
+```
+
+### 11.6 删库重建的实操顺序（已验证）
+
+```bash
+# 1) 先把本地历史彻底改干净，并独立验证
+python scripts/scrub_git_history.py --repo ~/repos/Public-Skill --no-skip-scripts
+cd ~/repos/Public-Skill && git rev-list --count HEAD
+git grep -niE "<指纹>" $(git rev-list --all)      # 必须无输出
+
+# 2) 删（需 delete_repo scope）
+gh repo delete <owner>/<repo> --yes
+gh api repos/<owner>/<repo> --jq .name            # 应 404
+
+# 3) 建 + 推（分两步，比 create --source --push 稳，origin 已存在时后者易报错）
+gh repo create <owner>/<repo> --public --description "<原描述>"
+git push -u origin main
+
+# 4) 恢复 topics：gh repo edit <owner>/<repo> --add-topic <t1> --add-topic <t2>
+
+# 5) 全新克隆验证 + 旧 SHA 可达性
+gh api repos/<owner>/<repo>/commits/<旧sha> --jq .sha
+```
+
+**"清干净"的判定信号是 422** —— `{"message":"No commit found for SHA: ...","status":"422"}`
+表示对象真的不存在了。返回 200 就说明还在。
+
+两个操作层面的注意点：
+
+- **`delete_repo` 要单独授权**：`gh auth refresh -h github.com -s delete_repo`。
+  该流程**必须用能跨轮存活的后台方式跑** —— 用普通 `&` 起的进程会在轮次结束时被回收，
+  GitHub 那边即使授权成功、本机也没来得及保存令牌，设备码白白作废（踩过两次）。
+- **`git bundle` 备份在本机不可靠**（实测静默不落盘）。反正技能仓内容可由
+  `sync_skill_repos.py` 从源目录一键重建，删库前确认本地工作区 `git status` 干净即可。
