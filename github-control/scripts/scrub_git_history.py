@@ -181,6 +181,11 @@ def main():
     ap.add_argument("--branch", help="分支名（默认当前分支）")
     ap.add_argument("--keep-temp", action="store_true", help="保留临时文件")
     ap.add_argument("--no-prune", action="store_true", help="不清理陈旧 ref")
+    ap.add_argument("--no-secrets-rules", action="store_true",
+                    help="不用本机 secrets 派生规则（只做 --replace 的定向替换）")
+    ap.add_argument("--replace", action="append", metavar="OLD==>NEW",
+                    help="定向字面量替换，可重复。用于仓库本身的公开名要保留、"
+                         "只需清掉个别值的场景")
     args = ap.parse_args()
 
     repo = Path(args.repo).expanduser().resolve()
@@ -201,9 +206,28 @@ def main():
         repo_priv, repo_pub, _ = mod.discover_repos()
     except Exception:
         pass
-    rules, originals = mod.build_rules(repo_priv, repo_pub)
+
+    rules, originals = [], []
+    lit_originals = []          # --replace 的值：大小写敏感，复查时不能用 -i
+    if not args.no_secrets_rules:
+        rules, originals = mod.build_rules(repo_priv, repo_pub)
+
+    # 定向替换：某些仓库（如项目仓）本身的名字/地址就是公开的，不能套用
+    # 技能仓那套"GH 登录名也换掉"的规则，只需清掉个别值。
+    for spec in (args.replace or []):
+        if "==>" not in spec:
+            print("--replace 需要 OLD==>NEW 形式，收到: %s" % spec)
+            return 2
+        old, new = spec.split("==>", 1)
+        if not old:
+            print("--replace 左侧不能为空")
+            return 2
+        rules.append((re.escape(old), new, 0))
+        lit_originals.append(old)
+
     if not rules:
-        print("规则为空，脱敏无意义，已中止（先确认 gh 已授权、secrets 文件就位）")
+        print("规则为空，脱敏无意义，已中止"
+              "（先确认 gh 已授权 / secrets 就位，或用 --replace 给定向规则）")
         return 2
 
     print("=" * 66)
@@ -275,18 +299,26 @@ def main():
     # ---- 独立复查 ----
     print("\n[3] 独立复查（全部新提交）")
     revs = (git(repo, "rev-list", "--all").stdout or "").split()
-    checks = []
-    if originals:
-        checks.append(("原始词表", "|".join(re.escape(v) for v in originals if v)))
-    checks.append(("内网 IP", r"192\.168\.\d+\.\d+|\b10\.\d+\.\d+\.\d+\b"))
-    hits = 0
-    for label, pat in checks:
+
+    def do_scan(label, pat, case_insensitive):
+        """复查语义必须与替换语义一致：字面量替换是大小写敏感的，
+        若统一加 -i，会把 `.workbuddy/` 这类大小写不同的正常内容误报成残留。"""
         if not pat or not revs:
-            continue
-        g = git(repo, "grep", "-niE", pat, *revs)
+            return 0
+        flags = ["grep", "-nE"] if not case_insensitive else ["grep", "-niE"]
+        g = git(repo, *flags, pat, *revs)
+        n = 0
         for ln in (g.stdout or "").splitlines():
             print("    [%s] %s" % (label, ln[:160]))
-            hits += 1
+            n += 1
+        return n
+
+    hits = 0
+    hits += do_scan("secrets 派生词表",
+                    "|".join(re.escape(v) for v in originals if v), True)
+    hits += do_scan("定向替换值",
+                    "|".join(re.escape(v) for v in lit_originals if v), False)
+    hits += do_scan("内网 IP", r"192\.168\.\d+\.\d+|\b10\.\d+\.\d+\.\d+\b", False)
     print("    无残留" if not hits else "    !! 发现 %d 处残留 —— 不要推送，先补规则" % hits)
 
     # ---- 推送 ----

@@ -436,6 +436,19 @@ python "$SC" ~/repos/Meeting --history    # 连 53 个提交的历史一起扫
 移除此类目录时要留意 **README 往往已经链接了它们**，删完得回头改 README，
 否则公开后一片死链。
 
+**转公开的完整顺序（少任何一步都会留痕）：**
+
+1. 体检：`scan_sensitive.py`（先工作区，再 `--history`）
+2. 改内容：路径 / 工具名换占位符；内部措辞中性化（含**文件名本身**，以及 README 里指向它们的链接）
+3. 补 LICENSE，并核对第三方组件许可（PyQt6 的 GPL/商业双授权是常见坑）
+4. 提交
+5. 历史改写：`scrub_git_history.py` —— **第 2 步改了内容就必须做**，否则老提交仍可取到原文
+6. 强制推送
+7. 切可见性：`gh repo edit <owner>/<repo> --visibility public --accept-visibility-change-consequences`
+8. **全新克隆复核**，并用体检工具再扫一次（本地干净 ≠ 远端干净）
+
+第 7 步只需 `repo` 权限；走到删库重建才需要 `delete_repo`。
+
 
 ## 11. 敏感内容已经推到公开仓：历史改写补救
 
@@ -454,6 +467,23 @@ python "$SC" --repo ~/repos/Public-Skill --push       # 复查无残留才强推
 
 它复用 `sync_skill_repos.py` 的 `build_rules()` 取规则（单一事实来源，脚本内无环境标识），
 逐提交重写工作树，替换为占位符，再清扫陈旧 ref、回收对象、反扫全部新提交。
+
+**项目仓要单独用。** 技能仓那套规则会连 GitHub 登录名一起换掉，而项目仓 README 里的
+`git clone https://github.com/<登录名>/<仓库>.git` 是**必须保留**的。此时改用定向替换：
+
+```bash
+python "$SC" --repo ~/repos/Meeting --no-secrets-rules \
+  --replace "<本机用户名>==><用户名>" \
+  --replace "<外部工具目录名>==><工具目录>"
+```
+
+`--replace OLD==>NEW` 可重复，按**字面量、大小写敏感**处理；
+`--no-secrets-rules` 关掉本机 secrets 派生规则。两条配套经验：
+
+- 只改最新提交没有用，老提交仍能取到 —— **改了文件内容/文件名之后必须再跑一次历史改写**。
+- 复查的**大小写语义必须与替换一致**。字面量替换是大小写敏感的，复查若统一加 `-i`，
+  就会把 `.workbuddy/` 这类大小写不同的正常内容误报成残留（实测踩过，44 处"残留"全是误报）。
+  工具现已按规则分别处理：派生词表用 `-i`，定向替换值用大小写敏感。
 
 ### 11.1 最大的坑：只删 reflog 和 gc 是不够的
 
