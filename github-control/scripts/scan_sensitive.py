@@ -41,7 +41,7 @@ PATTERNS = [
     ("疑似手机号", re.compile(r"(?<!\d)1[3-9]\d{9}(?!\d)")),
     ("AI 工具目录", re.compile(r"\.(?:qclaw|claude|cursor|codebuddy)\b")),
     ("公司名", re.compile(r"小湃|创维|Skyworth")),
-    ("域账号样式", re.compile(r"(?i)\b[a-z]{3}\d{4}\b|\b<DOMAIN>\b|\b<ACCOUNT>\b")),
+    ("域账号样式", re.compile(r"(?i)\b[a-z]{3}\d{4}\b")),
     ("令牌/密码字面量", re.compile(
         r"(?i)(?:password|passwd|token|secret|api[_-]?key)\s*[:=]\s*[\"'][^\"'\s]{6,}[\"']")),
 ]
@@ -83,10 +83,33 @@ def iter_blobs(repo, history):
             continue
 
 
+def runtime_wordlist():
+    """取本机真实值词表（复用同目录同步工具的运行时推导），不硬编码在脚本里。
+
+    这样"域 / 账号 / 主机名"这类**本项目特有**的值也能被扫到，
+    而脚本体保持零环境标识 —— 否则等于换个地方泄露命名规则。
+    """
+    p = Path(__file__).resolve().parent / "sync_skill_repos.py"
+    if not p.is_file():
+        return []
+    import importlib.util
+    try:
+        spec = importlib.util.spec_from_file_location("_sync_for_scan", p)
+        m = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(m)
+        priv, pub, _ = m.discover_repos()
+        _, originals = m.build_rules(priv, pub)
+        return [v for v in originals if v and len(v) >= 3]
+    except Exception:
+        return []
+
+
 def main():
     ap = argparse.ArgumentParser(description="公开仓库前的敏感信息体检")
     ap.add_argument("repo", help="仓库路径")
     ap.add_argument("--history", action="store_true", help="连 git 历史一起扫")
+    ap.add_argument("--no-secrets", action="store_true",
+                    help="不加载本机 secrets 派生词表，只用通用形状模式")
     args = ap.parse_args()
 
     repo = Path(args.repo).expanduser().resolve()
@@ -97,8 +120,18 @@ def main():
     mode = "全部历史" if args.history else "当前工作区"
     print("仓库: %s\n范围: %s\n" % (repo, mode))
 
+    checks = list(PATTERNS)
+    if not args.no_secrets:
+        wl = runtime_wordlist()
+        if wl:
+            checks.append(("本机 secrets 派生值",
+                           re.compile("|".join(re.escape(v) for v in wl))))
+            print("已加载运行时派生词表: %d 项（来自本机 secrets，未硬编码）\n" % len(wl))
+        else:
+            print("未取到运行时派生词表（gh 未授权或 secrets 缺失），仅用通用模式\n")
+
     total = 0
-    for label, rx in PATTERNS:
+    for label, rx in checks:
         seen = {}
         n = 0
         for tag, txt in iter_blobs(repo, args.history):
