@@ -155,19 +155,42 @@ git config --add remote.origin.fetch "+refs/heads/*:refs/origin/*"
 `~/.workbuddy/skills/` 是**运行时目录**，两个仓库都是它的镜像 —— 改技能要改源头，
 再同步过去提交。
 
-同步流程：
+同步流程 —— **已工具化，不要手工 `cp -r`**：
 
-1. 改 `~/.workbuddy/skills/<skill>/`
-2. 私有仓：`cp -r` 覆盖对应目录 → 提交推送
-3. 公开仓：同样 `cp -r`，但**必须先脱敏**再提交
-4. 推送后**从远端重新读取文件再扫一遍**验证，不要只看本地
+```bash
+SC=~/.workbuddy/skills/github-control/scripts/sync_skill_repos.py
+python "$SC"            # 同步两个本地仓库 + 脱敏 + 独立复查（不推送）
+python "$SC" --push     # 复查无残留时自动 commit + push
+```
+
+| 参数 | 作用 |
+|---|---|
+| （默认） | 私有仓原样复制；公开仓复制后脱敏；随后用原始词表**独立复查** |
+| `--push` | 无残留才提交推送；有残留则中止并报出位置 |
+| `--only private` / `--only public` | 只处理其中一个 |
+| `--dry-run` | 只报告，不写文件 |
+| `--all` | 同步源目录全部技能（默认只同步**两仓已有**的技能，避免本机新装/实验性技能被意外带入库） |
+
+**脱敏规则不硬编码在脚本里** —— 真实值运行时从 `gh api user`、环境变量、
+`~/.workbuddy/secrets/eda-host.json` 推导，所以脚本本身可以安全进入公开仓库。
+项目特定词（公司名等）放 `~/.workbuddy/secrets/sanitize-extra.json`，
+格式 `{"真实值": "<占位符>"}`，同样不入库。
+
+两个必须知道的实现细节：
+
+- **脚本自身要跳过替换**。它里面写着"泛化模式"（如 `(?i)\b<ACCOUNT_PREFIX>\d{4}\b`、
+  `[A-Z][A-Z0-9]{2,7}-PC`），不跳过就会被自己的规则改写，工具直接失效 ——
+  这是隐蔽的自伤，用文件名白名单规避。
+- **域 / 账号 / 主机名类规则必须大小写不敏感**。同一标识在文档里会写成
+  `<DOMAIN>` / `<DOMAIN>` / `<ACCOUNT>` / `<ACCOUNT>` 多种形态，区分大小写会漏一半。
 
 脱敏要点（踩过的坑）：
 
 - **占位符按环境维度定义，一个维度一个名字，不要复用。** 把
   `<USER>` 同时当"系统用户名"和"GitHub 用户名"用，读文档的人必然混乱。
-  本机已用：`<HOST_IP>` `<HOSTNAME>` `<DOMAIN>` `<ACCOUNT>` `<SHARE>`
-  `<VENV_PYTHON>` `<USER>`（系统用户名）`<GH_LOGIN>` `<GH_ID>`
+  现用：`<HOST_IP>` `<HOSTNAME>` `<DOMAIN>` `<ACCOUNT>` `<SHARE>`
+  `<USER>`（系统用户名）`<GH_LOGIN>` `<GH_ID>` `<GH_NAME>` `<LOCAL_UID>`、
+  `Private-Skill`（私有仓库名）
 - **跨技能引用会重新引入标识。** 写举例时若援引另一个技能的案例，
   那个案例里的域账号 / 主机名会跟着进仓库 —— 举例要泛化，
   或者退回源头把那段也改掉。
@@ -179,12 +202,7 @@ git config --add remote.origin.fetch "+refs/heads/*:refs/origin/*"
 「反斜杠被 shell 吞掉」，域和账号连写成一个词），带 `\b` 的规则扫不到，
 只能靠残留复查发现。
 
-公开仓推送前的终检：
-
-```bash
-# <...> 换成你环境里的真实标识
-grep -rniE "<本机用户名>|<域账号>|<主机名>|<内网IP>|<公司名>" . --exclude-dir=.git
-```
+推送后**从远端重新读取文件再扫一遍**验证，不要只看本地：
 
 ## 8. 安全边界
 
