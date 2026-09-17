@@ -172,7 +172,7 @@ signing in to" 指的就是本机 CLI —— 手机不会弹码。
 **绕行**：**同一个仓库要按三种路径写法各登记一次**，否则换个写法就又被拦：
 
 ```bash
-git config --global --add safe.directory "//<HOSTNAME>/<SHARE>/<repo>"
+git config --global --add safe.directory "//<HOSTNAME>/XPI/<repo>"
 git config --global --add safe.directory "Z:/<repo>"
 git config --global --add safe.directory "Z:/<repo>/.git"   # clone 时 git 明确点名这条
 ```

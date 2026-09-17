@@ -172,13 +172,13 @@ The host this skill was built against, kept here so the working setup is not los
 
 | Item | Value |
 |---|---|
-| Host | `<HOSTNAME>` / `<HOST_IP>`, domain `<DOMAIN>`, account `<USER>` |
+| Host | `<HOSTNAME>` / `<HOST_IP>`, domain `<DOMAIN>`, account `<ACCOUNT>` |
 | Config file | `~/.workbuddy/secrets/eda-host.json` (found automatically) |
-| Interpreter with paramiko | `<VENV_PYTHON>` |
+| Interpreter with paramiko | `C:\Users\<USER>\.workbuddy\binaries\python\envs\default\Scripts\python.exe` |
 | Log file | `%TEMP%\ssh_ctl_last.txt` |
 | Session verdict | ELEVATED (`S-1-16-12288`) as verified 2026-09-17 |
 | Notable constraint | Cannot check out node-locked EDA licences over SSH — that needs the physical console via VNC on port 5900 |
-| `D:\SHARE` share | Syncthing-synchronised; never stage temporary files there |
+| `D:\XPI` share | Syncthing-synchronised; never stage temporary files there |
 
 The user's standing instruction: control the host directly rather than asking them
 to copy files across by hand.

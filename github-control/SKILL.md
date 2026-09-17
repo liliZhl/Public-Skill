@@ -148,10 +148,10 @@ git config --add remote.origin.fetch "+refs/heads/*:refs/origin/*"
 
 | 仓库 | 可见性 | 内容 |
 |---|---|---|
-| `<GH_LOGIN>/Private-Skill` | 私有 | 原样，不动一字 |
+| `<GH_LOGIN>/<USER>-Skill` | 私有 | 原样，不动一字 |
 | `<GH_LOGIN>/Public-Skill` | 公开 | 同一批技能，**已脱敏** |
 
-本地工作副本：`~/repos/Private-Skill`、`~/repos/Public-Skill`。
+本地工作副本：`~/repos/<USER>-Skill`、`~/repos/Public-Skill`。
 `~/.workbuddy/skills/` 是**运行时目录**，两个仓库都是它的镜像 —— 改技能要改源头，
 再同步过去提交。
 
@@ -278,3 +278,95 @@ gh api repos/<owner>/<repo>/contents/config.ini.example \
 gh api repos/<owner>/<repo>/git/trees/<branch>?recursive=1 \
   --jq '[.tree[]|select(.type=="blob")]|length'                          # 与本地 tracked 数比对
 ```
+
+---
+
+## 10. 仓库可复现性检查（「让别人能跟着编译」）
+
+用户要「写好 README」时，真正要的是**别人能跑起来**。先扫这五项 ——
+缺任何一项，README 写得再漂亮也白搭。
+
+### 10.1 被 gitignore 排除的运行时资源
+
+```bash
+cat .gitignore                                  # 被排除的大目录
+git -c core.quotepath=false ls-files | wc -l    # 实际入库文件数
+```
+
+凡是**运行时必需但被排除**的资源（模型、二进制、数据包），README 必须逐项写清
+**去哪下载 → 放到哪个确切路径 → 目录名有没有要求**。
+
+> 真实教训：程序按硬编码名 `sensevoice` 找模型，而从 ModelScope 网页下载解压出来叫
+> `iic--SenseVoiceSmall` —— 不改名就永远「模型缺失」。
+
+### 10.2 下载源必须实测，不能凭记忆
+
+模型 / 数据集 / 工具链的仓库 ID 极易写错（网上文章也常有笔误）。写进 README 前逐个验证：
+
+```bash
+# ModelScope
+python -c "
+import json,urllib.request
+u='https://www.modelscope.cn/api/v1/models/<ns>/<name>'
+j=json.loads(urllib.request.urlopen(urllib.request.Request(
+    u,headers={'User-Agent':'Mozilla/5.0'}),timeout=25).read())
+print(j['Data']['Downloads'])"
+# HuggingFace
+curl -sI https://huggingface.co/<repo>/resolve/main/config.json | head -1
+```
+
+> 真实教训：`iic/Fun-ASR-Nano-2512` 返回 **404**，官方命名空间其实是 `FunAudioLLM/`。
+> 两种写法在网页文章里都出现过，只有 API 能分辨。
+
+### 10.3 路径事实以代码为准，别信常量名
+
+同一项目里两处可能对同一目录给出**不同**的相对基准
+（如 `main.py` 的 `APP_DIR` 与 `asr_engine.py` 的 `Path(__file__).parent.parent`）。
+**以真正读取文件的那段代码为准**：
+
+```bash
+grep -rn "model_root\|MODEL_DIR\|BIN_DIR\|ffmpeg" src/ | head -30
+```
+
+### 10.4 构建脚本是否硬编码了个人路径
+
+```bash
+grep -rnE "C:\\\\Users\\\\[A-Za-z0-9]+|/home/[a-z]+/|/Users/[A-Za-z]+/" *.py *.spec *.bat 2>/dev/null
+```
+
+**这是「别人编译不了」的头号原因。** 优先**修脚本**，而不是在 README 里教人
+「请修改第 13 行的路径」：
+
+- 通用解释器 → 用 `sys.executable`
+- 特殊解释器（如 32 位）→ 环境变量覆盖 + 常见路径探测 + **校验特征**（位数 / 版本），
+  找不到时给明确指引，而不是默默用错
+- 修完把原硬编码值保留在候选列表，对原开发机即 **no-op**（零回归风险）
+
+### 10.5 依赖清单的废弃项
+
+功能被移除后，依赖常留在清单里，新环境照着装会白拉体积巨大的包
+（典型：`sentence-transformers` 连带拉入 PyTorch）。
+**加注释标明**「已废弃、新环境无需安装」，比直接删更安全（不破坏历史环境）。
+
+### 10.6 补防误提交规则
+
+为「必须存在但内容不入库」的目录（模型目录等）加规则，并**逐条验证**：
+
+```
+mod/*
+!mod/README.md
+```
+
+```bash
+git check-ignore -v mod/README.md      # 命中 ! 规则 → 会入库
+git check-ignore -v mod/x/model.pt     # 命中 mod/* → 被忽略
+```
+
+### 10.7 交付前自查清单
+
+- [ ] README 含：环境要求 / 从零编译步骤 / 外部依赖获取 / 配置说明 / 打包 / 常见问题
+- [ ] 所有下载链接与仓库 ID **实测可用**
+- [ ] 构建脚本可在他人机器运行（无个人路径）
+- [ ] `.gitignore` 防误提交规则已验证
+- [ ] 敏感信息扫描（个人路径 / 内网标识 / 凭据）无命中
+- [ ] 推送后**从远端读回**验证，不只看本地

@@ -198,12 +198,12 @@ screen mode id:i:1          # 1=窗口(配 desktopwidth/height 1600x900)，2=全
    - **域主机开 SMB 共享给"非域"客户端（同网段互传大文件，比 VNC 文件传输快得多，可随机访问）**：
      - **权限是两层取交集：实际权限 = 共享权限 ∩ NTFS 权限，两层都要放行**（只给一层是最常见的"密码对却拒绝访问"）。四道闸门：网络可达 → 445 放行 → 共享权限 → NTFS 权限。
      - **主机侧（可在 VNC 里操作）**：文件夹右键 → 属性 → **共享** → **高级共享** → 勾"共享此文件夹" → 共享名（用 ASCII，如 `EDA`）→ **权限** → 加上要授权的账号（**默认只有 Everyone 只读，很多人卡在这**）；再到**安全**选项卡给同一账号"修改"权限。命令行等价：`New-SmbShare -Name EDA -Path D:\Share_EDA -FullAccess "主机名\user"` + `icacls D:\Share_EDA /grant "主机名\user:(OI)(CI)M"`；查看用 `net share` / `Get-SmbShare`（需管理员）。
-     - **共享「已存在」的目录（如 `D:\SHARE`）不要走右键向导的默认权限**（默认只有 `Everyone` 只读，最常见的"我明明共享了却进不去"）。一条命令：`New-SmbShare -Name SHARE -Path D:\SHARE -FullAccess <账号>`，共享名用 ASCII。**授权对象二选一**：① 当前域账号（笔记本端用 `域名\账号`，要求域控可达且域策略允许 NTLM，不一定通）；② **主机本地账号**（非域客户端最稳；域机若没有可用本地账号，`New-LocalUser -Name vncshare -PasswordNeverExpires` 建一个专用账号，共享与 NTFS 都授权给它，笔记本端用 `主机名\账号`，彻底绕开域认证与 NTLM 依赖）。NTFS 层同样要放行：`icacls D:\SHARE /grant "<账号>:(OI)(CI)M"`（M=修改；要完全控制用 F；只给读用 R 并配 `-ReadAccess`）。
-     - **跑完自查三项**：`Get-SmbShare -Name SHARE | fl Name,Path`（路径对不对）、`Get-SmbShareAccess -Name SHARE`（账号在不在、权限够不够）、`Test-Path` 前置确认目录存在；再对照 `$env:COMPUTERNAME` / `$env:USERDOMAIN` 算出笔记本端账号前缀，别凭记忆填。
+     - **共享「已存在」的目录（如 `D:\XPI`）不要走右键向导的默认权限**（默认只有 `Everyone` 只读，最常见的"我明明共享了却进不去"）。一条命令：`New-SmbShare -Name XPI -Path D:\XPI -FullAccess <账号>`，共享名用 ASCII。**授权对象二选一**：① 当前域账号（笔记本端用 `域名\账号`，要求域控可达且域策略允许 NTLM，不一定通）；② **主机本地账号**（非域客户端最稳；域机若没有可用本地账号，`New-LocalUser -Name vncshare -PasswordNeverExpires` 建一个专用账号，共享与 NTFS 都授权给它，笔记本端用 `主机名\账号`，彻底绕开域认证与 NTLM 依赖）。NTFS 层同样要放行：`icacls D:\XPI /grant "<账号>:(OI)(CI)M"`（M=修改；要完全控制用 F；只给读用 R 并配 `-ReadAccess`）。
+     - **跑完自查三项**：`Get-SmbShare -Name XPI | fl Name,Path`（路径对不对）、`Get-SmbShareAccess -Name XPI`（账号在不在、权限够不够）、`Test-Path` 前置确认目录存在；再对照 `$env:COMPUTERNAME` / `$env:USERDOMAIN` 算出笔记本端账号前缀，别凭记忆填。
      - **`New-SmbShare` 在「不给任何账号参数」时的默认共享权限是 `Everyone: 读取`**（官方 DSC 文档明确：不加 `-FullAccess`/`-ChangeAccess`/`-ReadAccess` 才会补 Everyone 读取）。所以 `Get-SmbShareAccess` 里若看到 **`Everyone` = 完全控制**，那**不是这条命令产生的**，而是**手工建共享时留下的**（Explorer → 属性 → 共享 → 高级共享 → 权限 → Everyone → 勾"完全控制"）。加固一条命令：`Revoke-SmbShareAccess -Name <共享名> -AccountName Everyone -Force`。**别只清共享层**——NTFS 层用 `icacls <路径>` 看全量 ACL（`(OI)(CI)` = 子目录/文件继承；`M`=修改 / `F`=完全控制 / `R`=只读）；两层是交集，谁更严谁生效。
      - **共享层 vs NTFS 层的分工惯例**：共享层放宽（给 `Authenticated Users` 完全控制）、真正的访问控制交给 NTFS（继承、deny、审计行为都更可预期）。这样做的代价是"共享层看起来谁都能进"，排查时容易误判，所以团队内要统一口径。
      - **445 一般不用再动**：实测笔记本探主机 445 = 3ms OPEN（见上文"同网段多端口探测"）。若被 GPO 收走"文件和打印机共享"规则组，本地改不动，找 IT。
-     - **客户端侧连接**：资源管理器地址栏 `\\<HOST_IP>\<SHARE>`，或 `net use Z: \\<HOST_IP>\<SHARE> /user:主机名\本地账号 *`（末尾 `*` 交互输密码，避免明文留在命令行历史）；可加 `/persistent:yes`。
+     - **客户端侧连接**：资源管理器地址栏 `\\<HOST_IP>\EDA`，或 `net use Z: \\<HOST_IP>\EDA /user:主机名\本地账号 *`（末尾 `*` 交互输密码，避免明文留在命令行历史）；可加 `/persistent:yes`。
      - **账号写法三选一，写错必失败**：① `主机名\本地账号`（**非域客户端最稳**）；② `域名\域账号`（需能联系域控且域策略允许 NTLM）；③ `域账号@域名`（UPN）。**绝不能用 Windows Hello PIN** —— PIN 绑定设备，不用于网络认证；域机器日常用 PIN/人脸登录时，要让用户在主机上 `Win+L` 切"密码"方式确认真正的账号密码。
      - **报错对照**：`组织的安全策略阻止未经身份验证的来宾访问` = 账号被解析成 Guest（先改用显式 `主机名\账号`；真要开来宾才改 `HKLM\SOFTWARE\Policies\Microsoft\Windows\LanmanWorkstation\AllowInsecureGuestAuth=1` 或 gpedit「启用不安全的来宾登录」，**有安全代价、公司机器慎做**）｜`系统错误 53` = 名称解析或共享名写错，改用 IP 直连｜**`系统错误 1219` 多重连接** = 同一服务器已存在另一账号的会话，先 `net use * /delete` 再重连｜`拒绝访问` = 共享权限或 NTFS 未放行（两层都查）｜**反复弹密码框** = 凭据管理器有该 IP 的旧条目，删掉（`cmdkey /list` 可看）｜域机器还受 GPO 限制："网络访问: 共享和安全模型（经典/仅来宾）"、"不允许匿名枚举 SAM 账户和共享"。
      - **工程纪律**：**不要把 EDA 工程直接放在网络共享盘上跑**（性能 + 文件锁 + 许可风险），SMB 只当大文件传输通道；单文件小传输用 Viewer 的 `Ctrl+Alt+F7` 更省事。
@@ -228,7 +228,7 @@ screen mode id:i:1          # 1=窗口(配 desktopwidth/height 1600x900)，2=全
    - **配置文件到底在哪（1.8.3.0 实测，别猜）**：从开始菜单打开 `UltraVNC Server - Settings` 后，**窗口标题栏会直接写出正在用的 ini 路径**（实测为 `C:\ProgramData\UltraVNC\ultravnc.ini`，服务模式走 ProgramData，不是安装目录 `C:\Program Files\uvnc bvba\UltraVNC\`）。要判断/改 ini 前先看标题栏，别按老资料去安装目录找。settings 界面的其余要点：`Security` 页只设 VNC Password 即可，**MS-Logon / New MS-Logon 都不要勾**（要域账号认证就得处理域名格式与域密码，等于把已绕开的坑请回来；且 MS-Logon II 是 legacy 弱实现），Encryption 属可选加固（两端都要配插件）；底部 `Password required` 必须保持勾选。
    - **NoMachine 已不能当免费方案用（2026-09 实测，重要）**：NoMachine **自 v10 起取消免费版服务器端**（原 Everybody / free edition 停售；v10 发布于 2026-07-30）。服务器端只剩两条路：**Personal Edition 订阅**（约 $24.5/年/台）或 **14 天评估许可证**（需注册 NoMachine 账号 + 联网校验）。许可证文件名固定为 `server.lic`，放在**服务端安装目录的 `etc\` 下**（如 `E:\APP\NoMachine\etc\server.lic`）；也可以用 `%ALLUSERSPROFILE%\NoMachine\nxserver\nxserver.exe --subscriptionset <lic路径>` 从命令行安装。因此 `No subscription found on this server` 的**真实含义是该服务器没装 `server.lic`**（v9 起所有服务器端产品都走订阅校验），**不是**"装错了 Enterprise 包"（这是早前版本的误判）。验证方法：查 `<安装目录>\etc\server.lic` 是否存在，或看日志里的 `ERROR! File ...\etc\server.lic does not exist.`（客户端侧日志在 `C:\Users\<用户>\.nx\server.log`）。**此报错下改用户名、改密码、改防火墙全都无效** —— 直接换 UltraVNC，不要再耗；确要 NoMachine 就买订阅或领 14 天试用许可。
    - 若 NoMachine 确有有效许可，它的优点仍在：Windows/Mac 端**不创建虚拟桌面**，连接的就是**物理桌面（控制台会话）**；NX 协议对 PCB/CAD 图形响应优于 RDP。注意多用户无法各自独立桌面，所有人共享同一物理桌面；主机上若已有他人登录，可能需在主机侧确认接入（PhysicalDesktopAuthorization）。
-   - **（仅在 NoMachine 有有效许可、能走到登录界面时适用）登录界面报 `Authentication failed, please try again.`**：出现 `You are now connected to the requested machine` 就说明网络/协议/授权都通了，纯登录问题。头号原因是**用户名格式**：NoMachine 的 Username 字段必须写 `域名\用户名`（NetBIOS 域，如 `<DOMAIN>\<USER>`）；只写 `<USER>` 会被当作**主机本地账号**去查本地 SAM，域用户查不到 → 直接认证失败。次选 UPN 写法 `user@domain.fqdn`。若两种格式都败，就是密码值问题（域机器日常用 PIN/人脸，用户往往没真正敲过域密码）—— 让其在主机上按 `Win+L` 改用「密码」方式登录验证一次，别反复试（会触发域锁定）。
+   - **（仅在 NoMachine 有有效许可、能走到登录界面时适用）登录界面报 `Authentication failed, please try again.`**：出现 `You are now connected to the requested machine` 就说明网络/协议/授权都通了，纯登录问题。头号原因是**用户名格式**：NoMachine 的 Username 字段必须写 `域名\用户名`（NetBIOS 域，如 `<DOMAIN>\<ACCOUNT>`）；只写 `<ACCOUNT>` 会被当作**主机本地账号**去查本地 SAM，域用户查不到 → 直接认证失败。次选 UPN 写法 `user@domain.fqdn`。若两种格式都败，就是密码值问题（域机器日常用 PIN/人脸，用户往往没真正敲过域密码）—— 让其在主机上按 `Win+L` 改用「密码」方式登录验证一次，别反复试（会触发域锁定）。
    - **读 NoMachine 日志**：`nxd.log`（守护进程日志）只记服务端启停 —— 出现 `Server started with pid ... / Listening for connections on any interface on port 4000 / Listening for UDP packets on port 4000` 即服务端配置正常；`14:09:30 启动 → 数秒后 terminated → 再重启` 属安装或服务重启的正常动作，不是故障。**它不含连接明细**，所以"没连上"不能只看 nxd.log，要看同目录的 `server.log`/`nxserver.log` 和客户端报错。用户找不到日志位置时，用服务端/客户端托盘图标的 "Gather logs" 或 Server status → Logs 导出。
    - **判断服务端是否真装在主机**：在怀疑的那台机器上跑 `Test-Path C:\ProgramData\NoMachine` + `Get-Service nxserver` + `Get-NetTCPConnection -LocalPort 4000 -State Listen`。三者全空 = 这台机器没装服务端（用户常把服务端装到自己笔记本上，或只装了客户端）。
 2. **浮动许可才是最干净的解法**：向 IT/厂商要 license server，把 `MGLS_LICENSE_FILE=27000@<licserver>`（Mentor）/`LM_LICENSE_FILE=...` 指过去，RDP、虚拟机都能用。
@@ -265,7 +265,7 @@ Get-NetTCPConnection -LocalPort 22 -State Listen
 **主机完全没有外网时的投递与安装（2026-09 实测流程，Win11 24H2 域主机）**：
 
 - **投递通道不要用业务共享目录**。若目标机的共享目录是 Syncthing/OneDrive 之类的**同步目录**（看到 `.stfolder` / `.stversions` / `.stignore` 就是），丢安装包进去会被同步到其他节点。改用**管理共享**：`\\<主机名>\D$`、`\\<主机名>\C$`（域管理员账号可直接访问；`\\<主机名>\E$` 之类不存在的盘符当然返回 False，先枚举主机实际盘符）。实测主机 `D:\app` 是约定俗成的应用目录，暂存放 `D:\app\_offline_staging` 最不打扰。
-- **一个映射盘引发的假阴性**：共享已按**主机名**映射成盘符（如 `Z:` → `\\<HOSTNAME>\<SHARE>`）后，再用**IP**去 `Test-Path \\<HOST_IP>\<SHARE>` 会返回 **False** —— 同一台服务器用两个名字被视为两条连接（对应报错 1219 家族）。**已经映射了盘符就直接用盘符，或用同一个主机名**，不要混用 IP 与主机名来判定共享是否存在。
+- **一个映射盘引发的假阴性**：共享已按**主机名**映射成盘符（如 `Z:` → `\\<HOSTNAME>\XPI`）后，再用**IP**去 `Test-Path \\<HOST_IP>\XPI` 会返回 **False** —— 同一台服务器用两个名字被视为两条连接（对应报错 1219 家族）。**已经映射了盘符就直接用盘符，或用同一个主机名**，不要混用 IP 与主机名来判定共享是否存在。
 - **选哪个离线包**：GitHub `PowerShell/Win32-OpenSSH` 的 releases 里，`OpenSSH-Win64.zip`（免安装，配 `install-sshd.ps1`）与 `OpenSSH-Win64-vX.Y.Z.msi`（静默 `msiexec /i ... /qn /norestart`，装到 `C:\Program Files\OpenSSH`）。注意该项目**近期所有发行版都标 `-Preview`/`-Beta` 且 body 写明 "preview-release (non-production ready)"**，这是它一贯做法，不是异常。两个包都带上，MSI 失败（域机可能被"关闭 Windows Installer"策略拦）就退到 ZIP。
 - **装前必查 VC++ 运行时**：离线包依赖 `vcruntime140.dll` / `msvcp140.dll`。直接经管理共享查主机 `C:\Windows\System32\vcruntime140.dll` 是否存在即可判定；存在就不用再补 VC++ redist，省掉一个离线依赖。绝大多数装了 EDA/CAD 的机器都已具备。
 - **先确认主机上"到底缺什么"**：`C:\Windows\System32\OpenSSH\` 在 Windows 上**默认就存在，但只有客户端**（`ssh.exe` / `scp.exe` / `sftp.exe` / `ssh-keygen.exe`……）。**看到这个目录不等于服务端已装 —— 关键是看里面有没有 `sshd.exe`**。这一步能直接避免误判。
@@ -295,11 +295,11 @@ ssh -o BatchMode=yes -l '<域>\<用户>' <host>   # 同样返回 Permission deni
 **域账号的连接格式（客户端侧头号坑）**：微软文档明确 **域用户/组一律按 `域名\用户名`（NameSamCompatible）解析**，默认 sshd 会把裸用户名当**本地 SAM 账号**查 → 必然认证失败。正确写法：
 
 ```
-ssh domain\username@servername          # 官方推荐格式，如 ssh <DOMAIN>\<USER>@<HOST_IP>
-ssh -l '<DOMAIN>\<USER>' <HOST_IP>  # 等价写法
+ssh domain\username@servername          # 官方推荐格式，如 ssh <DOMAIN>\<ACCOUNT>@<HOST_IP>
+ssh -l '<DOMAIN>\<ACCOUNT>' <HOST_IP>  # 等价写法
 ```
 
-**Git Bash 下必须加引号**（`'<DOMAIN>\<USER>'`），否则 `\x` 被 shell 吞掉变成 `<DOMAIN>x<USER>`；cmd / PowerShell 下可直接写。密码填**域密码，不是 PIN**（同 RDP/SMB 的老问题）。认证方式仅 `password` 与 `publickey` 两种（不支持 Entra 账号）。
+**Git Bash 下必须加引号**（`'<DOMAIN>\<ACCOUNT>'`），否则 `\x` 被 shell 吞掉变成 `<DOMAIN><ACCOUNT>`；cmd / PowerShell 下可直接写。密码填**域密码，不是 PIN**（同 RDP/SMB 的老问题）。认证方式仅 `password` 与 `publickey` 两种（不支持 Entra 账号）。
 
 **免密密钥登录**：客户端 `ssh-keygen -t ed25519`；公钥落点分两种 —— 账号**属于 Administrators 组时必须放 `C:\ProgramData\ssh\administrators_authorized_keys`**（放到 `%USERPROFILE%\.ssh\authorized_keys` 会被直接忽略，这是最常踩的一步），非管理员才放用户目录。拷完收紧 ACL（**必须**，否则 sshd 拒用该文件）：
 
@@ -311,7 +311,7 @@ Restart-Service sshd
 **默认落在 cmd.exe，不是 PowerShell**（首次登录用户常立刻踩到：敲 `ls` 报 `'ls' 不是内部或外部命令`）。三种切法，成本递增：
 
 1. **会话里直接敲 `powershell`** —— 一行、零配置、立刻可用（`ls` 在 PS 里是 `Get-ChildItem` 的别名，能直接用）。日常首选。
-2. **临时指定**：`ssh -t -l '<DOMAIN>\<USER>' <HOST_IP> powershell`（`-t` 必须有，否则拿不到交互式终端）。
+2. **临时指定**：`ssh -t -l '<DOMAIN>\<ACCOUNT>' <HOST_IP> powershell`（`-t` 必须有，否则拿不到交互式终端）。
 3. **改默认 shell**（全局、需管理员 + 重启 sshd）：
 
 ```powershell
@@ -326,7 +326,7 @@ cmd 与 PowerShell 常用命令对照（用户在 SSH 里习惯敲 Linux 风格�
 | 想做的 | cmd | PowerShell |
 |---|---|---|
 | 列目录 | `dir` | `ls` / `gci` |
-| 切目录 | `cd /d D:\SHARE`（**跨盘必须带 `/d`**） | `cd D:\SHARE` |
+| 切目录 | `cd /d D:\XPI`（**跨盘必须带 `/d`**） | `cd D:\XPI` |
 | 看文件内容 | `type f.txt` | `cat f.txt` / `gc` |
 | 找文本 | `findstr /i "x" f.txt` | `Select-String x f.txt` |
 | 进程 | `tasklist` / `taskkill /pid N /f` | `ps` / `Stop-Process -Id N` |
@@ -367,7 +367,7 @@ cmd /c "..."                            # 被本环境安全策略拦截
 import paramiko
 c = paramiko.SSHClient()
 c.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-c.connect(host, username=r"<DOMAIN>\<USER>", password=pw,
+c.connect(host, username=r"<DOMAIN>\<ACCOUNT>", password=pw,
           allow_agent=False, look_for_keys=False, timeout=25)
 _i, so, se = c.exec_command(cmd); out = so.read(); rc = so.channel.recv_exit_status()
 ```
@@ -378,7 +378,7 @@ _i, so, se = c.exec_command(cmd); out = so.read(); rc = so.channel.recv_exit_sta
 
 **公钥认证的坑（重要）**：某些域主机上 publickey 认证会**认证成功但连接被重置** —— 事件日志表现为先 `Accepted publickey`，紧接着 `sshd-session: error: unable to get security token for user`、`get_user_token - unable to generate token on 2nd attempt`、`fatal: fork of unprivileged child failed`。原因是密码路径走 `LogonUser`、公钥路径走 S4U，后者在该环境失败。**出现这种情况时，确保不要在任何 `authorized_keys` 里留公钥** —— 否则客户端会先试公钥、被重置且**不回落密码认证**，等于把用户彻底挡在 SSH 门外。诊断思路：从 `\\<host>\C$\Windows\System32\winevt\Logs\OpenSSH%4Admin.evtx` 把日志复制出来本地 `Get-WinEvent -Path` 解析（远程 `Get-WinEvent -ComputerName` 走 RPC，常被防火墙挡）。
 
-**传文件**：`sftp -l '<DOMAIN>\<USER>' <HOST_IP>` 后用 `put`/`get`（Windows 盘符在 sftp 里写作 `/D:/SHARE`）；或直接用 `scp`。已开 SMB（445）时两者可并用：SMB 适合图形化拖拽，SSH 适合脚本化/自动化。
+**传文件**：`sftp -l '<DOMAIN>\<ACCOUNT>' <HOST_IP>` 后用 `put`/`get`（Windows 盘符在 sftp 里写作 `/D:/XPI`）；或直接用 `scp`。已开 SMB（445）时两者可并用：SMB 适合图形化拖拽，SSH 适合脚本化/自动化。
 
 **排障与安全**：日志默认进 ETW，看 `事件查看器 → 应用程序和服务日志 → OpenSSH`；要落文件则在 `sshd_config` 设 `SyslogFacility LOCAL0`（输出到 `%ProgramData%\ssh\logs`），改完先 `sshd -t` 校验再重启。做公网端口映射是红线；域账号可被暴力破解并触发锁定，优先密钥认证，必要时用 `AllowUsers`/`AllowGroups`（写成 `域名\用户`）或改非 22 端口。
 
