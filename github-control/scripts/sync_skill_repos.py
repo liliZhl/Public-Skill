@@ -47,6 +47,7 @@ SELF_SCRIPTS = {
     os.path.basename(__file__),
     "sync_skill_repos.py",
     "scrub_git_history.py",
+    "scan_sensitive.py",
 }
 
 
