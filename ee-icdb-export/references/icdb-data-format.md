@@ -62,7 +62,7 @@ TFlat_Net_Properties=database.npr
 行数不含表头。`database.sym` 首行样例：
 
 ```
-1  RN05  1  3  $6I4851  <PART_NAME>  <PART_NO>  <COMPANY>:res01
+1  <R6>  1  3  <AUTO_NET>  <PART_NAME>  <PART_NO>  <COMPANY>:res01
 ```
 
 注意 `Reference_Designator`、`Part_Name`、`Part_Number` **在 `sym` 里就有**，
@@ -122,7 +122,7 @@ database.spn ── Flat_Net_Name ──> 引脚级网络（元件挂在哪根�
 
 - `sym.Part_Number` 已可用，无需经 `prt` 二次查。
 - Value 必须走 `spr`；同一 `Symbol_ID` 会有多行（每个属性一行）。
-- 网络名以 `$` 开头（如 `$6N548`）代表**未命名/内部网络**，非实际信号名；
+- 网络名以 `$` 开头（如 `<AUTO_NET>`）代表**未命名/内部网络**，非实际信号名；
   真实信号名如 `XTALO`。
 - `npr` 是网络级属性（`FLATNETNAME`、`NETCLASS`、`MAXSTUBLEN` 等），做阻抗/等长规则审查时用得上。
 

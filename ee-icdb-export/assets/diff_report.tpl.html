@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ECO 差异报告 {{LABEL_A}} vs {{LABEL_B}}</title>
+<style>
+:root{
+ --bg:#f5f7f9;--card:#fff;--line:#e2e7ed;--line2:#eef1f5;
+ --ink:#1b2430;--ink2:#5b6673;--ink3:#97a2ae;--bar:#f2f5f8;--chip:#eef2f7;
+ --add:#c0392b;--del:#1a7f4b;--mod:#1f6feb;--key:#b45309;--pin:#6d28d9;
+ --ren:#0e7490;
+}
+@media (prefers-color-scheme:dark){:root{
+ --bg:#11151b;--card:#181e26;--line:#2a3340;--line2:#232b35;
+ --ink:#e7ecf2;--ink2:#a7b2be;--ink3:#78838f;--bar:#1c232c;--chip:#1f2833;
+ --add:#ff7a6b;--del:#4bd398;--mod:#6aa9ff;--key:#ffb648;--pin:#b18cff;
+ --ren:#4ccfe0;
+}}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);
+ font:14px/1.6 "Microsoft YaHei","PingFang SC","Segoe UI",system-ui,sans-serif}
+code,.mono{font-family:Consolas,"Cascadia Mono","Courier New",monospace;
+ font-size:12.5px}
+header{background:#12212f;color:#fff;padding:18px 0}
+header .in{max-width:1180px;margin:0 auto;padding:0 24px}
+h1{margin:0 0 7px;font-size:19px;font-weight:600}
+.meta{font-size:12.5px;color:#a8bccf;display:flex;gap:14px;flex-wrap:wrap;
+ align-items:baseline}
+.meta b{color:#fff;font-weight:600}
+.meta .gen{margin-left:auto}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px 56px}
+nav{position:sticky;top:0;z-index:9;display:flex;gap:8px;flex-wrap:wrap;
+ padding:14px 0 12px;background:var(--bg);border-bottom:1px solid var(--line);
+ margin-bottom:22px}
+nav button{background:var(--card);border:1px solid var(--line);border-radius:8px;
+ padding:8px 15px;font:inherit;font-size:14px;color:var(--ink2);cursor:pointer}
+nav button:hover{border-color:var(--ink3);color:var(--ink)}
+nav button .n{margin-left:9px;font-size:12px;color:var(--ink3)}
+nav button.on{background:var(--ink);border-color:var(--ink);color:var(--bg);
+ font-weight:600}
+nav button.on .n{color:var(--bg);opacity:.72}
+.pane{display:none}
+.pane.on{display:block}
+.lead{background:var(--card);border:1px solid var(--line);
+ border-left:3px solid var(--mod);border-radius:10px;padding:14px 18px;
+ margin:0 0 20px}
+.lead div+div{margin-top:5px}
+.lead b{font-weight:600}
+h2{font-size:16.5px;font-weight:600;margin:0 0 7px}
+h2 .sub{font-size:12.5px;color:var(--ink3);font-weight:400;margin-left:9px}
+h3{font-size:13.5px;font-weight:600;color:var(--ink2);margin:26px 0 9px}
+h3:first-of-type{margin-top:0}
+h3 .sub{font-size:12.5px;color:var(--ink3);font-weight:400;margin-left:8px}
+p.desc{font-size:13px;color:var(--ink2);margin:0 0 16px;max-width:940px}
+.chips{display:grid;grid-template-columns:repeat(auto-fit,minmax(152px,1fr));
+ gap:10px;margin:0 0 24px}
+.chip{display:block;text-align:left;background:var(--card);
+ border:1px solid var(--line);border-radius:10px;padding:11px 14px;
+ font:inherit;color:inherit}
+button.chip{cursor:pointer}
+button.chip:hover{border-color:var(--ink3)}
+.chip .k{display:block;font-size:12px;color:var(--ink3)}
+.chip .v{display:block;font-size:21px;font-weight:600;
+ font-variant-numeric:tabular-nums;line-height:1.35}
+.chip .d{display:block;font-size:11.5px;color:var(--ink3)}
+.chip.hot{border-left:3px solid var(--key)}
+.chip.zero .v{color:var(--ink3);font-weight:400}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:10px;
+ overflow:hidden;margin-bottom:16px}
+.scroll{overflow-x:auto}
+.filters{display:flex;flex-wrap:wrap;gap:7px;align-items:center;
+ padding:11px 14px;border-bottom:1px solid var(--line)}
+.filters button{background:var(--chip);border:1px solid transparent;
+ border-radius:13px;padding:3px 11px;font:inherit;font-size:12px;
+ color:var(--ink2);cursor:pointer}
+.filters button:hover{border-color:var(--ink3)}
+.filters button.on{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.fcnt{margin-left:auto;font-size:12px;color:var(--ink3)}
+table{border-collapse:collapse;width:100%}
+th{background:var(--bar);text-align:left;padding:9px 14px;font-size:12px;
+ font-weight:600;color:var(--ink3);white-space:nowrap;
+ border-bottom:1px solid var(--line)}
+td{padding:9px 14px;border-top:1px solid var(--line2);vertical-align:top}
+tbody tr:first-child td{border-top:0}
+tbody tr:hover{background:var(--bar)}
+td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+tr.k-add td:first-child{box-shadow:inset 3px 0 0 var(--add)}
+tr.k-del td:first-child{box-shadow:inset 3px 0 0 var(--del)}
+tr.k-swap td:first-child{box-shadow:inset 3px 0 0 var(--key)}
+tr.k-pin td:first-child{box-shadow:inset 3px 0 0 var(--pin)}
+tr.k-mod td:first-child{box-shadow:inset 3px 0 0 var(--mod)}
+tr.k-ren td:first-child{box-shadow:inset 3px 0 0 var(--ren)}
+tr.k-drift td:first-child{box-shadow:inset 3px 0 0 var(--ink3)}
+.badge{display:inline-block;padding:2px 8px;border-radius:5px;font-size:12px;
+ font-weight:600;white-space:nowrap;background:var(--chip);color:var(--ink2)}
+.badge.k-add{color:var(--add)}
+.badge.k-del{color:var(--del)}
+.badge.k-swap{color:var(--key)}
+.badge.k-pin{color:var(--pin)}
+.badge.k-mod{color:var(--mod)}
+.badge.k-ren{color:var(--ren)}
+.badge.k-drift{color:var(--ink3)}
+.fld{display:flex;gap:7px;align-items:baseline;flex-wrap:wrap}
+.fld+.fld{margin-top:3px}
+.flab{font-size:12px;color:var(--ink3);white-space:nowrap}
+.old{color:var(--ink3)}
+.arw{color:var(--ink3)}
+.new{font-weight:600}
+.addcol{color:var(--add);font-weight:600}
+.delcol{color:var(--del);font-weight:600}
+.dim{color:var(--ink3)}
+.empty-row td{padding:26px 14px;text-align:center;color:var(--ink3)}
+.tnote{padding:10px 14px;border-top:1px solid var(--line);font-size:12px;
+ color:var(--ink3);background:var(--bar)}
+.src{background:var(--card);border:1px solid var(--line);border-radius:10px;
+ padding:13px 16px;font-size:12.5px;color:var(--ink2);margin-top:26px}
+.src div+div{margin-top:5px}
+.src code{color:var(--ink);word-break:break-all}
+footer{max-width:1180px;margin:0 auto;padding:0 24px 44px;color:var(--ink3);
+ font-size:12px}
+@media print{
+ :root{--bg:#fff;--card:#fff;--line:#c3c3c3;--line2:#e6e6e6;--bar:#f4f4f4;
+  --ink:#000;--ink2:#333;--ink3:#666;--chip:#eee}
+ body{background:#fff}
+ header{background:#fff;color:#000;border-bottom:2px solid #000}
+ header .meta,header .meta b{color:#333}
+ nav{display:none}
+ .pane{display:block!important;page-break-before:always}
+ .pane:first-child{page-break-before:auto}
+ .filters,.fcnt{display:none}
+ .chip{border-color:#bbb}
+ .chips{grid-template-columns:repeat(4,1fr)}
+ tr{break-inside:avoid}
+ .panel{break-inside:auto}
+ .src{break-inside:avoid}
+}
+</style></head>
+<body>
+<header><div class="in"><h1>ECO 差异报告</h1><div class="meta"><span>旧版 <b>{{LABEL_A}}</b></span><span>→</span><span>新版 <b>{{LABEL_B}}</b></span><span class="gen">单文件自包含 · 可离线打开 · 可 Ctrl+P 打印</span></div></div></header>
+<div class="wrap"><nav>{{NAV}}</nav><div id="panes">{{PANES}}</div></div>
+<footer>由 ee-icdb-export 的 --diff 生成。单文件自包含、无外部引用，可直接拷贝分发。</footer>
+<script>
+var PANES=['overview','bom','net','part'];
+function go(id){
+  for(var i=0;i<PANES.length;i++){
+    var el=document.getElementById('pane-'+PANES[i]);
+    if(el) el.className='pane'+(PANES[i]===id?' on':'');
+  }
+  var bs=document.querySelectorAll('nav button');
+  for(var j=0;j<bs.length;j++){
+    bs[j].className=(bs[j].getAttribute('data-p')===id)?'on':'';
+  }
+  window.scrollTo(0,0);
+}
+function filt(tbl,kind){
+  var t=document.getElementById(tbl); if(!t) return;
+  var rs=t.tBodies[0].rows,n=0;
+  for(var i=0;i<rs.length;i++){
+    var k=rs[i].getAttribute('data-k');
+    var show=(kind==='*')||(k===kind);
+    rs[i].style.display=show?'':'none';
+    if(show) n++;
+  }
+  var panel=t.closest('.panel');
+  if(!panel) return;
+  var bar=panel.querySelector('.filters');
+  if(bar){
+    var bs=bar.querySelectorAll('button');
+    for(var j=0;j<bs.length;j++){
+      bs[j].className=(bs[j].getAttribute('data-k')===kind)?'on':'';
+    }
+  }
+  var c=panel.querySelector('.fcnt');
+  if(c) c.textContent='显示 '+n+' / '+rs.length+' 行';
+}
+function jump(id,tbl,kind){go(id); if(tbl) filt(tbl,kind||'*');}
+(function(){
+  var ts=document.querySelectorAll('table[id]');
+  for(var i=0;i<ts.length;i++){
+    var p=ts[i].closest('.panel'); if(!p) continue;
+    var b=p.querySelector('.filters button.on');
+    if(b) filt(ts[i].id,b.getAttribute('data-k'));
+  }
+})();
+</script>
+</body></html>

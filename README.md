@@ -9,6 +9,7 @@
 | `eda-host-control` | 通过 SSH 驱动一台 Windows 主机：执行命令与 PowerShell、上传下载文件、读目录与日志、探测会话权限等级 |
 | `windows-lan-remote-access` | 排查并修复 Windows 局域网内「远程控制另一台电脑」失败的问题：ping 单向不通、RDP 凭据不工作、域账号(NetBIOS/UPN)登录名格式、主机侧远程桌面授权与防火墙、RDP 证书/资源重定向警告、无外网环境下第三方远控选型、EDA 类节点锁定许可与远程会话冲突 |
 | `github-control` | 在本机直接管理 GitHub：gh CLI 授权（设备码方向说明）、git 身份与凭据配置、仓库增删改、提交推送、Issue 与 PR、Actions 日志排查；附环境自检、**转公开前的敏感信息体检**、**已推送内容的历史改写补救**与技能双仓同步工具，以及 Windows 平台故障绕行（PATH 未注入、`refs/remotes` 写入被丢弃、沙箱内 clone 不落地） |
+| `ee-icdb-export` | 从 Mentor/Siemens Expedition EE 工程里直接导出 BOM 与引脚级网表（不打开 GUI、不用 COM、不用 32 位解释器，仅标准库），并把同一工程两个版本的差异做成自包含 HTML 报告与多工作表 Excel 报表，用于 ECO 变更核对 |
 
 ## 占位符对照表（重要）
 
@@ -38,6 +39,27 @@
 > **注意 `<USER>` 有两种用法，靠上下文区分**：在 `CORP\<USER>`、`<DOMAIN>\<USER>` 这类写法中指**域账号**；在 `C:\Users\<USER>\...` 这类**文件路径**中指 **Windows 系统用户名**。
 > 两者通常不同，替换时别搞混。
 
+### 项目 / 设计数据类
+
+`ee-icdb-export` 的文档与示例里，来自真实工程的数据一律换成下列占位符：
+
+| 占位符 | 含义 | 参考替换值 |
+|---|---|---|
+| `<PROJECT_ROOT>` | 存放工程的总目录 | `D:\designs` |
+| `<PROJECT>` | 产品 / 项目代号目录 | `MyProject` |
+| `<PROJECT_ID>` | 工程目录全名（含版本号，形如销售订单号） | `1234-ABCDEFGH-0001` |
+| `<DESIGN>` | 设计文件名主体（`<DESIGN>.prj`） | `MyBoard` |
+| `<ROOT_BLOCK>` | 顶层原理图块名 | `TopBlock` |
+| `<COMPANY>` | 公司名（出现在料号或元件属性里） | `ACME` |
+| `<PART_NO>` | 物料号 | `1234-XXXXXX-A1` |
+| `<PART_NAME>` | 器件规格名 | `CAP0603` |
+| `<NET_EN>` `<NET_GPIO>` `<NET_CTRL>` `<NET_RAIL>` | 网络名 | `EN_SIGNAL` |
+| `<AUTO_NET>` | EDA 自动生成的网络名 | `$1N00000` |
+| `<Q1>` `<R1>`…`<R6>` `<C1>` `<U1>` `<U2>` `<D1>` | 位号（元件在板上的位置） | `U1`、`R1`… |
+
+`<AUTO_NET>` 之外，`$` 开头的网络名都是工具自动生成、不含设计意图；位号与网络名
+在文档里只作**示意**，与任何真实设计无关。
+
 文档中出现的 `<HOST_IP>`、`CORP\alice`、`user@domain.com`、`\\host\share` 等均为**通用示例值**，与任何真实环境无关。
 
 ## 目录结构
@@ -55,6 +77,26 @@
 │   └── scripts/
 │       ├── ssh_ctl.py             # 主编排工具
 │       └── ssh_setup.py           # 配置向导 / 自检
+├── ee-icdb-export/
+│   ├── SKILL.md
+│   ├── README.md
+│   ├── LICENSE
+│   ├── assets/
+│   │   └── diff_report.tpl.html   # 网页报告模板（改样式只动这里）
+│   ├── scripts/                   # 8 个模块，仅标准库
+│   │   ├── icdb_export.py         # CLI 入口 / 向导 / 报告调度
+│   │   ├── ee_env.py              # SDD_HOME 发现、环境构建、工程扫描
+│   │   ├── ee_export.py           # 跑 icdb2csv、读表、写 BOM CSV
+│   │   ├── ee_diff.py             # 比对引擎 + 统一记录集
+│   │   ├── report_html.py         # 网页报告
+│   │   ├── report_xlsx.py         # 多工作表 Excel
+│   │   ├── report_csv.py          # 扁平 CSV
+│   │   ├── choice_ui.py           # 终端提问 / 复选框
+│   │   └── xlsx_writer.py         # 手写 .xlsx（zip + XML）
+│   └── references/
+│       ├── diff-design.md         # 比对的设计决策与实测记录
+│       ├── icdb-data-format.md    # 12 张表的列结构、属性号映射
+│       └── troubleshooting.md     # 报错原文 → 根因 → 处置
 ├── github-control/
 │   ├── SKILL.md
 │   ├── README.md
@@ -75,7 +117,7 @@
 复制到 Agent 的用户级技能目录（以 WorkBuddy 为例）：
 
 ```powershell
-Copy-Item -Recurse .\eda-host-control, .\github-control, .\windows-lan-remote-access "$env:USERPROFILE\.workbuddy\skills\"
+Copy-Item -Recurse .\eda-host-control, .\ee-icdb-export, .\github-control, .\windows-lan-remote-access "$env:USERPROFILE\.workbuddy\skills\"
 ```
 
 ## 使用前提
@@ -102,6 +144,18 @@ python scripts/ssh_setup.py
 
 ```
 python scripts/gh_env.py
+```
+
+### `ee-icdb-export`
+
+- Mentor/Siemens Expedition EE 7.9.x（DxDesigner → Expedition 流程，iCDB 工程）
+- Windows（导出器是 Windows 可执行文件）
+- Python 3.7+，**只用标准库**，无需 pip 安装任何东西
+
+先跑一次环境自检，它会自己找 EE 的安装位置：
+
+```
+python scripts/icdb_export.py --doctor
 ```
 
 ## 说明
