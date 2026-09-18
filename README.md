@@ -47,11 +47,11 @@
 |---|---|---|
 | `<PROJECT_ROOT>` | 存放工程的总目录 | `D:\designs` |
 | `<PROJECT>` | 产品 / 项目代号目录 | `MyProject` |
-| `<PROJECT_ID>` | 工程目录全名（含版本号，形如销售订单号） | `1234-ABCDEFGH-0001` |
+| `<PROJECT_ID>` | 工程目录全名（含版本号） | `PRJ-0001` |
 | `<DESIGN>` | 设计文件名主体（`<DESIGN>.prj`） | `MyBoard` |
 | `<ROOT_BLOCK>` | 顶层原理图块名 | `TopBlock` |
 | `<COMPANY>` | 公司名（出现在料号或元件属性里） | `ACME` |
-| `<PART_NO>` | 物料号 | `1234-XXXXXX-A1` |
+| `<PART_NO>` | 物料号 | `PN-00001` |
 | `<PART_NAME>` | 器件规格名 | `CAP0603` |
 | `<NET_EN>` `<NET_GPIO>` `<NET_CTRL>` `<NET_RAIL>` | 网络名 | `EN_SIGNAL` |
 | `<AUTO_NET>` | EDA 自动生成的网络名 | `$1N00000` |
