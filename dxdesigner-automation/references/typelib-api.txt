@@ -1,0 +1,1838 @@
+======================================================================
+ DxDesigner type library walk
+======================================================================
+file : E:\APP\MentorGraphics\7.9.5EE\SDD_HOME\wv\win32\bin\viewdraw.tlb
+size : 188040 bytes
+time : 2026-09-18 15:25:02
+
+lib name : ViewDraw
+lib attr : (IID('{4ADEF4E1-690A-11CE-9261-0020C5E26659}'), 0, 1, 1, 0, 8)
+typeinfos: 223
+
+----------------------------------------------------------------------
+SUMMARY
+----------------------------------------------------------------------
+  COCLASS     86 : AddinInfo, Application, ApplicationProtectionProxy, Arc, Attribute, AutoString, Block, Box, CCmdMgr, CColor, CComFrameworkAdapter, CCommPropDef, CCommPropMgr, CICTDocs, CProjectData, CRipper, CStringList, CVdApp, CVdArc, CVdAttr, CVdBlock, CVdBox, CVdCircle, CVdCmpPin, CVdComp, CVdConnection, CVdDoc, CVdDocs, CVdICTAttr, CVdICTObjs, CVdICTViews, CVdLabel, CVdLibrary, CVdLine, CVdNet, CVdObjs, CVdPin, CVdPoint, CVdRect, CVdSegment, CVdText, CVdViews, CViewDrawView, Circle, ComFrameworAdapter, CommandsManager, CommonPropertyDefinition, CommonPropertyManager, Component, ComponentPin, Connection, HDLSourceDocument, HDLSourceDocuments, HTMLSourceDocument, HTMLSourceDocuments, ICTAttribute, ICTBlock, ICTComp, ICTDocument, ICTDocuments, ICTNet, ICTView, Label, Library, Line, MergeData, Net, Objects, PDBPartitions, Pin, Point, ProjectData, ProjectManagerEventSink, Rect, Ripper, SchematicSheetDocument, SchematicSheetDocuments, Segment, StringCollection, StringList, SymbolPartitions, Text, View, Viewport, Views, _CColor
+  DISPATCH    58 : IAddinInfo, IAutoString, IColor, ICommandsManager, ICommonPropertyDefinition, ICommonPropertyManager, IFramework, IHDLSourceDocument, IHDLSourceDocuments, IHTMLSourceDocument, IHTMLSourceDocuments, IICTDocuments, IMergeData, IODProjectData, IPDBPartitions, IPredicate, IProjectData, IProjectManagerEventSink, IRipper, IStringCollection, IStringList, ISymbolPartitions, IVdApp, IVdAppEvents, IVdAppProtectionProxy, IVdArc, IVdAttr, IVdBlock, IVdBox, IVdCircle, IVdCmpPin, IVdComp, IVdConnection, IVdDoc, IVdDocs, IVdICTAttr, IVdICTBlock, IVdICTComp, IVdICTDocument, IVdICTNet, IVdICTView, IVdICTViews, IVdLabel, IVdLibrary, IVdLine, IVdNet, IVdObjs, IVdPin, IVdPoint, IVdRect, IVdSchematicSheetDocument, IVdSchematicSheetDocuments, IVdSegment, IVdText, IVdView, IVdViewEvents, IVdViews, IViewport
+  ENUM        79 : AddReuseModifierType, AddReuseType, AddinInfoDispIDs, ColorDispIDs, CommandsManagerIDs, GenericStatusIndicatorColor, ICTDocumentDispIDs, ICTDocumentsIDs, IODProjectDataDispIDs, MergeDataDispIDs, PDBPartitionsDispIDs, ProjectDataDispIDs, RipperDispIDs, SchematicSheetDocumentDispIDs, SchematicSheetDocumentsDispIDs, StringListDispIDs, SymbolPartitionsDispIDs, VdAllOrSelected, VdAnnoObject, VdAnnoPos, VdAnnoType, VdAppEventDispatchID, VdAppIDs, VdAppProtectionProxyIDs, VdArcPoint, VdArrowType, VdBlockDispIDs, VdBoolean, VdBusOrWire, VdColor, VdCorner, VdCreateTime, VdDataType, VdDisplayType, VdDocumentAccess, VdFillStyle, VdFont, VdICTAttrEnum, VdICTBlockEnum, VdICTCompEnum, VdICTNetEnum, VdICTViewEnum, VdJointType, VdLabelVisibility, VdLibraryType, VdLineCap, VdLineJoin, VdLinePattern, VdLineStyle, VdNameType, VdNotifyFlag, VdObjectClass, VdObjectType, VdObjectTypeMask, VdOnOff, VdOpenMode, VdOrientation, VdOrigin, VdPEFlowMode, VdParamMode, VdParamValue, VdPinEndType, VdProjectSettingTab, VdPromoteType, VdRasterop, VdScope, VdSegmentEndType, VdSelectionType, VdSense, VdSheetSize, VdSide, VdSilentMode, VdSourceDocumentType, VdSplineOrder, VdSplineType, VdSymbolType, VdTextFlags, VdVisibilityFlag, VdWhichJoint
+
+----------------------------------------------------------------------
+DETAIL (interfaces / dispatch interfaces)
+----------------------------------------------------------------------
+
+### IVdObjs  [DISPATCH]  ?
+    methods=12  properties=0  impl=1
+    methods:
+      AddRef()
+      Application()   [PROPERTY-PUT]
+      Count()   [PROPERTY-PUT]
+      GetIDsOfNames(riid, rgszNames, cNames, lcid, rgdispid)
+      GetType(Index)
+      GetTypeInfo(itinfo, lcid, pptinfo)
+      GetTypeInfoCount(pctinfo)
+      Invoke(dispidMember, riid, lcid, wFlags, pdispparams, pvarResult, pexcepinfo, puArgErr)
+      Item(Index)
+      Parent()   [PROPERTY-PUT]
+      QueryInterface(riid, ppvObj)
+      Release()
+
+### IVdApp  [DISPATCH]  ?
+    methods=175  properties=0  impl=1
+    methods:
+      Activate()
+      ActiveDocument()   [PROPERTY-PUT]
+      ActiveICTView()   [PROPERTY-PUT]
+      ActiveView()   [PROPERTY-PUT]
+      ActiveViewHandle()   [PROPERTY-PUT]
+      AddAddin(pAddinInfo)
+      AddLibrary(LibraryPath, LibraryAlias, LibraryAccess, Position)
+      AddLibraryAndSaveIni(LibraryPath, LibraryAlias, LibraryAccess, Position)
+      AddRef()
+      Addins()   [PROPERTY-PUT]
+      AnnoDisplayTime(Context, Position, Timestring)
+      AnnoDisplayValue(Context, DesignPath, AnnType, AnnObject, ObjName, ObjValue)
+      AppendOutput(TabName, String)
+      Application()   [PROPERTY-PUT]
+      AttributeCanHaveOatValue(AttributeName)
+      AttributeValueMustBeUpper(AttributeName)
+      Bindings(BindingTable)
+      BrowseForSymbol(OnlyBorders, Title)
+      BusyCursor()   [PROPERTY-PUTREF]
+      BusyCursor()   [PROPERTY-PUT]
+      CheckIfNavigatorAddinsOpen()
+      ClearAllLibraries()
+      ClearEEVMMode()
+      ClientAdvisorFlags()   [PROPERTY-PUTREF]
+      ClientAdvisorFlags()   [PROPERTY-PUT]
+      CloseNavigatorAddins()
+      CloseProject()
+      CnsFileString()   [PROPERTY-PUT]
+      CommandBars()   [PROPERTY-PUT]
+      CommandDisable(CommandName)
+      CommandEnable(CommandName)
+      CommandLineArguments()   [PROPERTY-PUT]
+      CommandRemove(CommandName)
+      CommandsManager()
+      ConvertSchematicToICT(sSchName)
+      ConvertSymbol(sSymbol)
+      Cookies()   [PROPERTY-PUT]
+      CreateToolbar(Name)
+      CurrentProject()   [PROPERTY-PUTREF]
+      CurrentProject()   [PROPERTY-PUT]
+      DataObjExists(Library, Name, Extension, Class)
+      DataObjGetPath(Library, Name, Extension, Class)
+      DeleteBlock(Name)
+      DeleteLibrary(Position)
+      DeleteLibraryAndSaveIni(Position)
+      DeleteSheet(DesignName, SheetNumber)
+      DesignBlocks(Library, Name, SheetNumber, LevelString, RecurseDown)
+      DesignComponents(Library, Name, EndSheet, LevelString, RecurseDown)
+      DesignNets(Library, Name, EndSheet, LevelString, RecurseDown)
+      DesignPaths(Library, Name, LevelString, RecurseDown)
+      DisableSelectionBroadcast()
+      Documents()   [PROPERTY-PUT]
+      EDXEngine()   [PROPERTY-PUT]
+      EnableEEVMMode(eevmDataFile)
+      EnableSelectionBroadcast()
+      ExecuteCommand(CommandString)
+      ExecuteMenuCommand(command_name)
+      ExportForeignDatabase(sPath)
+      ExportSymbol(sSymbolName, sTargetDir)
+      ExtractPCB(sPath, sDetailedWiring)
+      FireCentralLibraryReload()
+      Flows()   [PROPERTY-PUT]
+      FullName()   [PROPERTY-PUT]
+      GetActiveDesign()
+      GetClassDefinitions(CreateIfNotDefined)
+      GetCommonPropertyManager()
+      GetConfigurationProperty(Name)
+      GetDefaultColor(ObjectType)
+      GetFramework()
+      GetICTContents(ICTName, OutputFilePath)
+      GetICTDocuments()
+      GetIDsOfNames(riid, rgszNames, cNames, lcid, rgdispid)
+      GetLastErrorId()
+      GetLastErrorString()
+      GetLibraries()
+      GetPEFlowMode()
+      GetProjectData()
+      GetProtectionProxy()
+      GetTypeFromIDispatch(Dispatch)
+      GetTypeInfo(itinfo, lcid, pptinfo)
+      GetTypeInfoCount(pctinfo)
+      Guid()
+      HTMLDocuments()   [PROPERTY-PUT]
+      ImportForeignDatabase(sPath)
+      Initialize(WDIRPath, LicensePath)
+      InsertSheet(DesignName, SheetNumber)
+      Interactive()   [PROPERTY-PUTREF]
+      Interactive()   [PROPERTY-PUT]
+      Invoke(dispidMember, riid, lcid, wFlags, pdispparams, pvarResult, pexcepinfo, puArgErr)
+      IsEEVMModeEnabled()
+      IsLibDeletable(Position)
+      KickViewbase(ForceReload)
+      LMGetSymbolLibPath()
+      LMSetSymbolLibPath(sPath)
+      LaunchSymbolEditor(sSymbolName)
+      LicenseMode()   [PROPERTY-PUT]
+      MakeReusableBlock(ProjectName, SchematicRoot, DestDir, RBName)
+      MoveLibrary(FromPosition, ToPosition)
+      MoveLibraryAndSaveIni(FromPosition, ToPosition)
+      Name()   [PROPERTY-PUT]
+      NewProject(ProjectPath, CentralLibraryPath, ServerName, ProjectTemplatePath)
+      ObjectColor(ObjectType)   [PROPERTY-PUTREF]
+      ObjectColor(ObjectType)   [PROPERTY-PUT]
+      OpenBlocks(BlockType)
+      OpenProject(ProjectPath)
+      OpenURL(URL)
+      OptionLevel()   [PROPERTY-PUT]
+      ParamAddListName(which_param, new_name)
+      ParamGetListNames(which_param)
+      ParamGetMode(Index)
+      ParamGetValue(Index)
+      ParamSetMode(Index, NewValue)
+      ParamSetValue(Index, NewValue)
+      Parent()   [PROPERTY-PUT]
+      PreviewDecal(DecalName)
+      PrimaryDirectory()   [PROPERTY-PUT]
+      PrintProject(DesignName, LevelStrings, PrintSymbols, ShowOrderDialog, PPOFile)
+      ProjMan()   [PROPERTY-PUT]
+      Project()   [PROPERTY-PUT]
+      PushPath(Top, HierPath, SheetNumber)
+      Query(Flags, Selected)
+      QueryBlocks(BlockType, Library)
+      QueryInterface(riid, ppvObj)
+      QueryPages(Name)
+      QueueDatabaseUpdates(bQueue)
+      QueueSelectEvents()   [PROPERTY-PUTREF]
+      QueueSelectEvents()   [PROPERTY-PUT]
+      Quit()
+      ReadIni(Inifilename)
+      RegisterOLECommand(CommandName, CommandDescription, bModifiesData, pDispatch)
+      Release()
+      RemoveProjectSettingTab(TabIndicator)
+      RunDesignIntegrityChecks(bNewPass)
+      SaveIni()
+      SchematicSheetDocuments()
+      SelectComponent(sSchName, sSheetName, sCompUID)
+      SelectNet(sSchName, sSheetName, sNetUID)
+      SelectPath(FileName, HierPath, SheetNumber, Type, AddSelected, SearchBus)
+      SelectPathCompPin(FileName, HierPath, SheetNumber, PinNumber, SelectType)
+      SetButtonBitmap(CommandID, BitmapFilePath)
+      SetButtonResourceDLL(CommandID, DllFilePath, resID)
+      SetClientAdvisor(Advisor, Flags)
+      SetConfigurationProperty(Name, val)
+      SetDefaultColor(ObjectType, Color)
+      SetEnvVariable(pName, pValue)
+      SetGenericStatusIndicatorState(eIndicatorColor, sToolTipText)
+      SetLibAddComp(DirPath)
+      SetLibFileNew(DirPath)
+      SetLibFileOpen(DirPath)
+      SetRedraw(Redraw)
+      SetViewAnalogFlag(state)
+      SheetsEditMode()   [PROPERTY-PUTREF]
+      SheetsEditMode()   [PROPERTY-PUT]
+      ShellCmd()   [PROPERTY-PUT]
+      SilentMode()   [PROPERTY-PUTREF]
+      SilentMode()   [PROPERTY-PUT]
+      SourceDocuments()   [PROPERTY-PUT]
+      StartMigration(ProjectPath, CentralLibPath)
+      StatusBarText()   [PROPERTY-PUTREF]
+      StatusBarText()   [PROPERTY-PUT]
+      SynchronizesViewBase()   [PROPERTY-PUTREF]
+      SynchronizesViewBase()   [PROPERTY-PUT]
+      TextViews()
+      ToolbarAction(Handle, Msg, wParam, lParam)
+      UnloadClassDefinitions()
+      UnregisterOLECommand(CommandName, ClientDispatch)
+      UpdateMenuBar(menuBarParentWnd, hMenu)
+      UserControl()
+      Version()   [PROPERTY-PUT]
+      ViewBaseSession()   [PROPERTY-PUT]
+      Visible()   [PROPERTY-PUTREF]
+      Visible()   [PROPERTY-PUT]
+      _GetCurrentProject()
+      _GetPrimaryDirectory()
+      _SetCurrentProject(ProjectFilename)
+
+### IVdDocs  [DISPATCH]  ?
+    methods=17  properties=0  impl=1
+    methods:
+      Add()
+      AddRef()
+      Application()   [PROPERTY-PUT]
+      Close()
+      Count()   [PROPERTY-PUT]
+      GetIDsOfNames(riid, rgszNames, cNames, lcid, rgdispid)
+      GetTypeInfo(itinfo, lcid, pptinfo)
+      GetTypeInfoCount(pctinfo)
+      Invoke(dispidMember, riid, lcid, wFlags, pdispparams, pvarResult, pexcepinfo, puArgErr)
+      Item(Index)
+      Open(FileName)
+      Parent()   [PROPERTY-PUT]
+      QueryInterface(riid, ppvObj)
+      Release()
+      SaveAll()
+      SelectPath(FileName, HierPath, SheetNumber, Type)
+      SelectPathCompPin(FileName, HierPath, SheetNumber, PinNumber, SelectType)
+
+### IVdDoc  [DISPATCH]  ?
+    methods=29  properties=0  impl=1
+    methods:
+      Activate()
+      AddRef()
+      Application()   [PROPERTY-PUT]
+      CancelSave(DoNotWarn)
+      Close(SaveChanges, FileName)
+      DataType()   [PROPERTY-PUT]
+      ExportMetafile(OutputName)
+      FullName()   [PROPERTY-PUT]
+      GetIDsOfNames(riid, rgszNames, cNames, lcid, rgdispid)
+      GetTypeInfo(itinfo, lcid, pptinfo)
+      GetTypeInfoCount(pctinfo)
+      GetViews()
+      Invoke(dispidMember, riid, lcid, wFlags, pdispparams, pvarResult, pexcepinfo, puArgErr)
+      IsAccess(AccessType)
+      Name()   [PROPERTY-PUT]
+      Open(FileName)
+      Parent()   [PROPERTY-PUT]
+      Path()   [PROPERTY-PUT]
+      Print(From, To, Copies)
+      PrintOut(From, To, Copies)
+      QueryInterface(riid, ppvObj)
+      ReRead(SheetNumber)
+      Release()
+      Save()
+      SaveAndCheck()
+      SaveAs(FileName)
+      Saved()   [PROPERTY-PUT]
+      Visible()   [PROPERTY-PUTREF]
+      Visible()   [PROPERTY-PUT]
+
+### IVdViews  [DISPATCH]  ?
+    methods=11  properties=0  impl=1
+    methods:
+      AddRef()
+      Application()   [PROPERTY-PUT]
+      Count()   [PROPERTY-PUT]
+      GetIDsOfNames(riid, rgszNames, cNames, lcid, rgdispid)
+      GetTypeInfo(itinfo, lcid, pptinfo)
+      GetTypeInfoCount(pctinfo)
+      Invoke(dispidMember, riid, lcid, wFlags, pdispparams, pvarResult, pexcepinfo, puArgErr)
+      Item(Index)
+      Parent()   [PROPERTY-PUT]
+      QueryInterface(riid, ppvObj)
+      Release()
+
+### IVdView  [DISPATCH]  ?
+    methods=39  properties=0  impl=1
+    methods:
+      Activate()
+      ActiveBlock()
+      AddAttributeMoveMode(AttributeString, Visibility)
+      AddMissingPorts()
+      AddRef()
+      AddReuseBlock(partName, SymbolName)
+      Application()
+      Block()   [PROPERTY-PUT]
+      BufferCopy()
+      BufferCut()
+      BufferPaste()
+      BufferPasteXY(PasteX, PasteY)
+      ComputeMBB(OLEItems, Xmin, Ymin, Xmax, Ymax)
+      Document()
+      GetIDsOfNames(riid, rgszNames, cNames, lcid, rgdispid)
+      GetJointLocs(AllOrSelected, JointType)
+      GetName(Flag)
+      GetSelectedNetName(bRetFullPath, bRetInternalName, Index)
+      GetTopLevelDesignName()
+      GetTypeInfo(itinfo, lcid, pptinfo)
+      GetTypeInfoCount(pctinfo)
+      Invoke(dispidMember, riid, lcid, wFlags, pdispparams, pvarResult, pexcepinfo, puArgErr)
+      ModifyVisibility(SelectString, Visibility, ApplyToSelected)
+      Query(Flags, Selected)
+      QueryInterface(riid, ppvObj)
+      Refresh()
+      Release()
+      SelectByName(Name)
+      SelectByName2(lpszObjName, bAddSelect)
+      SelectObject(ObjectType, Expression, SelectOwner, RegExp, AddSelect)
+      SelectSegmentByJointLoc(XCoordinate, YCoordinate, JointType)
+      SelectText(Pattern, Type, ApplyToSelected)
+      SetCenter(X, Y)
+      TopBlock()   [PROPERTY-PUT]
+      ViewFull()
+      Viewport()   [PROPERTY-PUT]
+      ZoomIn()
+      ZoomOut()
+      ZoomSelect()
+
+### IViewport  [DISPATCH]  ?
+    methods=42  properties=0  impl=1
+    methods:
+      AddRef()
+      Arc(X1, Y1, X2, Y2, X3, Y3)
+      Arrow(X1, Y1, X2, Y2, Arrowhead)
+      Box(Left, Top, Right, Bottom)
+      Circle(X, Y, Radius)
+      Color()   [PROPERTY-PUTREF]
+      Color()   [PROPERTY-PUT]
+      Ellipse(X, Y, XRadius, YRadius)
+      EraseRectangle(Left, Top, Right, Bottom)
+      FillStyle()   [PROPERTY-PUTREF]
+      FillStyle()   [PROPERTY-PUT]
+      GetIDsOfNames(riid, rgszNames, cNames, lcid, rgdispid)
+      GetObjectColor()
+      GetTypeInfo(itinfo, lcid, pptinfo)
+      GetTypeInfoCount(pctinfo)
+      Invoke(dispidMember, riid, lcid, wFlags, pdispparams, pvarResult, pexcepinfo, puArgErr)
+      Line(X1, Y1, X2, Y2)
+      LineCap()   [PROPERTY-PUTREF]
+      LineCap()   [PROPERTY-PUT]
+      LineJoin()   [PROPERTY-PUTREF]
+      LineJoin()   [PROPERTY-PUT]
+      LinePattern()   [PROPERTY-PUTREF]
+      LinePattern()   [PROPERTY-PUT]
+      LineThickness()   [PROPERTY-PUTREF]
+      LineThickness()   [PROPERTY-PUT]
+      PixelRectangle(Left, Top, Right, Bottom)
+      PixelToUser(XCoordinate, YCoordinate)
+      Point(X, Y)
+      PolyLine(ArrayOfXValues, ArrayOfYValues)
+      QueryInterface(riid, ppvObj)
+      RasterMode()   [PROPERTY-PUTREF]
+      RasterMode()   [PROPERTY-PUT]
+      Release()
+      SetClipRectangle(Left, Top, Right, Bottom)
+      SetObjectColor(newColor)
+      Spline(Type, Order, Granularity, XArrayOfPoints, YArrayOfPoints, Arrowhead, ArrowWidth, ArrowLength, ArrowFill)
+      Text(X, Y, String, Flags)
+      TextAngle()   [PROPERTY-PUTREF]
+      TextFont()   [PROPERTY-PUTREF]
+      TextSize()   [PROPERTY-PUTREF]
+      UserRectangle(Left, Top, Right, Bottom)
+      UserToPixel(XCoordinate, YCoordinate)
+
+### IVdRect  [DISPATCH]  ?
+    methods=15  properties=0  impl=1
+    methods:
+      AddRef()
+      Bottom()   [PROPERTY-PUTREF]
+      Bottom()   [PROPERTY-PUT]
+      GetIDsOfNames(riid, rgszNames, cNames, lcid, rgdispid)
+      GetTypeInfo(itinfo, lcid, pptinfo)
+      GetTypeInfoCount(pctinfo)
+      Invoke(dispidMember, riid, lcid, wFlags, pdispparams, pvarResult, pexcepinfo, puArgErr)
+      Left()   [PROPERTY-PUTREF]
+      Left()   [PROPERTY-PUT]
+      QueryInterface(riid, ppvObj)
+      Release()
+      Right()   [PROPERTY-PUTREF]
+      Right()   [PROPERTY-PUT]
+      Top()   [PROPERTY-PUTREF]
+      Top()   [PROPERTY-PUT]
+
+### IColor  [DISPATCH]  ?
+    methods=13  properties=0  impl=1
+    methods:
+      AddRef()
+      GetIDsOfNames(riid, rgszNames, cNames, lcid, rgdispid)
+      GetTypeInfo(itinfo, lcid, pptinfo)
+      GetTypeInfoCount(pctinfo)
+      Invoke(dispidMember, riid, lcid, wFlags, pdispparams, pvarResult, pexcepinfo, puArgErr)
+      QueryInterface(riid, ppvObj)
+      Release()
+      b()   [PROPERTY-PUTREF]
+      b()   [PROPERTY-PUT]
+      g()   [PROPERTY-PUTREF]
+      g()   [PROPERTY-PUT]
+      r()   [PROPERTY-PUTREF]
+      r()   [PROPERTY-PUT]
+
+### IVdBlock  [DISPATCH]  ?
+    methods=80  properties=0  impl=1
+    methods:
+      AddArc(X1, Y1, X2, Y2, X3, Y3)
+      AddAttribute(String, X, Y, Visibility)
+      AddBatchAttributes(AttributeListString)
+      AddBox(LowerLeftx, LowerLefty, UpperRightx, UpperRighty)
+      AddCircle(Centerx, Centery, Radius)
+      AddComponent(SymbolName, Locationx, Locationy)
+      AddComponentMoveMode(SymbolName, InitialLocationX, InitialLocationY)
+      AddComponentMoveModeEx(SymbolName, InitialLocationX, InitialLocationY, bAddNets, bLabelNets)
+      AddFub(FubName, LowerLeftx, LowerLefty, UpperRightx, UpperRighty)
+      AddLine(Pt1, Pt2)
+      AddLine2(X1, Y1, X2, Y2)
+      AddNet(Locationx1, Locationy1, Locationx2, Locationy2, CompPin1, CompPin2, BusOrWire)
+      AddPartInstance(PartPartitionName, DeviceName, SymbolName, Locationx, Locationy)
+      AddPin(X, Y)
+      AddPinAtLocation(X1, Y1, X2, Y2)
+      AddRef()
+      AddReuseBlockInstance(ReuseType, RBSymbolName, ModifierType, ModifierValue, bAddNets, bLabelNets, Locationx, Locationy)
+      AddReuseBlockInstanceEx(ReuseType, RBSymbolName, pMergeData, ModifierType, ModifierValue, bAddNets, bLabelNets, Locationx, Locationy)
+      AddSymbolInstance(SymbolPartitionName, SymbolName, Locationx, Locationy)
+      AddText(TextString, X, Y)
+      Application()   [PROPERTY-PUT]
+      ApplySymbolUpdate(SelectedOnly, Slot)
+      Attributes()   [PROPERTY-PUT]
+      ChangeBorder(NewBorder)
+      ChangeComponent(OldComp, NewComp)
+      ChangeComponentPreserveRefdes(OldComp, NewComp)
+      CheckIfWirUpToDateWithCDB()
+      ClearHighlight(SelectedOnly)
+      ConstraintObjectDefinitions()   [PROPERTY-PUT]
+      DataType()   [PROPERTY-PUT]
+      DeSelectAll()
+      DeleteAttribute(ObjectName, ObjectType, AttributeName)
+      DeleteBorder()
+      DeletePackagedAttribute(ObjectName, ObjectType, AttributeName, SyncCms)
+      DeleteSelected(delUnc)
+      DisableUpdateStoring()
+      DisplayType()   [PROPERTY-PUTREF]
+      DisplayType()   [PROPERTY-PUT]
+      EnableUpdateStoring()
+      EndUndoTransaction()
+      FindAttribute(AttributeName)
+      GetAttributeValues(ObjectName, ObjectType, AttributeNameList)
+      GetBatchAttributes()
+      GetBboxPoint(Location)
+      GetChildBlock()
+      GetIDsOfNames(riid, rgszNames, cNames, lcid, rgdispid)
+      GetName(Flag)
+      GetPackagedAttributeValues(ObjectName, ObjectType, AttributeNameList)
+      GetPackagedName(GraphicalName, ObjectType)
+      GetReuseBlockMergeData(ReuseType, RBSymbolName)
+      GetTypeInfo(itinfo, lcid, pptinfo)
+      GetTypeInfoCount(pctinfo)
+      InsertBorder()
+      Invoke(dispidMember, riid, lcid, wFlags, pdispparams, pvarResult, pexcepinfo, puArgErr)
+      IsBorderSymbol()   [PROPERTY-PUT]
+      IsFub()   [PROPERTY-PUT]
+      IsReadOnly()
+      IsValid()
+      LibraryName()   [PROPERTY-PUT]
+      LibraryType()   [PROPERTY-PUT]
+      OpenMode()   [PROPERTY-PUT]
+      Parent()   [PROPERTY-PUT]
+      Path()   [PROPERTY-PUT]
+      PromoteSymbolNumbers(SelectedOnly, Slot)
+      QueryInterface(riid, ppvObj)
+      Release()
+      RepositionAttributesAsOnSymbol(SelectedOnly)
+      SetAttributeValue(ObjectName, ObjectType, AttributeName, AttributeValue, IsOat)
+      SetBoundingBox(OriginX, OriginY, Width, Height)
+      SetPackagedAttributeValue(ObjectName, ObjectType, AttributeName, AttributeValue, IsOat, SyncCms)
+      SetZSheetSize(Width, Height)
+      SheetNum()   [PROPERTY-PUT]
+      SheetSize()   [PROPERTY-PUTREF]
+      SheetSize()   [PROPERTY-PUT]
+      StartUndoTransaction()
+      SymbolType()   [PROPERTY-PUTREF]
+      SymbolType()   [PROPERTY-PUT]
+      Type()   [PROPERTY-PUT]
+      UpdateBorder()
+      UserData()   [PROPERTY-PUT]
+
+### IVdPoint  [DISPATCH]  ?
+    methods=11  properties=0  impl=1
+    methods:
+      AddRef()
+      GetIDsOfNames(riid, rgszNames, cNames, lcid, rgdispid)
+      GetTypeInfo(itinfo, lcid, pptinfo)
+      GetTypeInfoCount(pctinfo)
+      Invoke(dispidMember, riid, lcid, wFlags, pdispparams, pvarResult, pexcepinfo, puArgErr)
+      QueryInterface(riid, ppvObj)
+      Release()
+      X()   [PROPERTY-PUTREF]
+      X()   [PROPERTY-PUT]
+      Y()   [PROPERTY-PUTREF]
+      Y()   [PROPERTY-PUT]
+
+### IVdArc  [DISPATCH]  ?
+    methods=24  properties=0  impl=1
+    methods:
+      AddRef()
+      Application()   [PROPERTY-PUT]
+      Color()   [PROPERTY-PUTREF]
+      Color()   [PROPERTY-PUT]
+      GetIDsOfNames(riid, rgszNames, cNames, lcid, rgdispid)
+      GetLocation(WhichPoint)
+      GetObjectColor()
+      GetTypeInfo(itinfo, lcid, pptinfo)
+      GetTypeInfoCount(pctinfo)
+      Invoke(dispidMember, riid, lcid, wFlags, pdispparams, pvarResult, pexcepinfo, puArgErr)
+      IsColorAutomatic()
+      LineStyle()   [PROPERTY-PUTREF]
+      LineStyle()   [PROPERTY-PUT]
+      Parent()   [PROPERTY-PUT]
+      QueryInterface(riid, ppvObj)
+      Release()
+      Selected()   [PROPERTY-PUTREF]
+      SetAutomaticColor(bAutomatic)
+      SetLocation(X1, Y1, X2, Y2, X3, Y3)
+      SetObjectColor(newColor)
+      Type()   [PROPERTY-PUT]
+      _GetColor()
+      _SetColor(newColor)
+      _SetSelected(Flag)
+
+### IVdBox  [DISPATCH]  ?
+    methods=26  properties=0  impl=1
+    methods:
+      AddRef()
+      Application()   [PROPERTY-PUT]
+      Color()   [PROPERTY-PUTREF]
+      Color()   [PROPERTY-PUT]
+      FillStyle()   [PROPERTY-PUTREF]
+      FillStyle()   [PROPERTY-PUT]
+      GetIDsOfNames(riid, rgszNames, cNames, lcid, rgdispid)
+      GetLocation(Flag)
+      GetObjectColor()
+      GetTypeInfo(itinfo, lcid, pptinfo)
+      GetTypeInfoCount(pctinfo)
+      Invoke(dispidMember, riid, lcid, wFlags, pdispparams, pvarResult, pexcepinfo, puArgErr)
+      IsColorAutomatic()
+      LineStyle()   [PROPERTY-PUTREF]
+      LineStyle()   [PROPERTY-PUT]
+      Parent()   [PROPERTY-PUT]
+      QueryInterface(riid, ppvObj)
+      Release()
+      Selected()   [PROPERTY-PUTREF]
+      SetAutomaticColor(bAutomatic)
+      SetLocation(X1, Y1, X2, Y2)
+      SetObjectColor(newColor)
+      Type()   [PROPERTY-PUT]
+      _GetColor()
+      _SetColor(newColor)
+      _SetSelected(Flag)
+
+### IVdCircle  [DISPATCH]  ?
+    methods=28  properties=0  impl=1
+    methods:
+      AddRef()
+      Application()   [PROPERTY-PUT]
+      Color()   [PROPERTY-PUTREF]
+      Color()   [PROPERTY-PUT]
+      FillStyle()   [PROPERTY-PUTREF]
+      FillStyle()   [PROPERTY-PUT]
+      GetCenter()
+      GetIDsOfNames(riid, rgszNames, cNames, lcid, rgdispid)
+      GetObjectColor()
+      GetTypeInfo(itinfo, lcid, pptinfo)
+      GetTypeInfoCount(pctinfo)
+      Invoke(dispidMember, riid, lcid, wFlags, pdispparams, pvarResult, pexcepinfo, puArgErr)
+      IsColorAutomatic()
+      LineStyle()   [PROPERTY-PUTREF]
+      LineStyle()   [PROPERTY-PUT]
+      Parent()   [PROPERTY-PUT]
+      QueryInterface(riid, ppvObj)
+      Radius()   [PROPERTY-PUTREF]
+      Radius()   [PROPERTY-PUT]
+      Release()
+      Selected()   [PROPERTY-PUTREF]
+      SetAutomaticColor(bAutomatic)
+      SetCenter(X, Y)
+      SetObjectColor(newColor)
+      Type()   [PROPERTY-PUT]
+      _GetColor()
+      _SetColor(newColor)
+      _SetSelected(Flag)
+
+### IVdComp  [DISPATCH]  ?
+    methods=37  properties=0  impl=1
+    methods:
+      ActivateMoveMode()
+      AddAttribute(String, X, Y, Visibility)
+      AddBatchAttributes(AttributeListSting)
+      AddBatchOats(AttributeListSting)
+      AddLabel(String, X, Y)
+      AddOat(String)
+      AddRef()
+      Application()   [PROPERTY-PUT]
+      Attributes()   [PROPERTY-PUT]
+      FindAttribute(AttributeString)
+      GetBatchAttributes()
+      GetBatchOats()
+      GetBboxPoint(Location)
+      GetConnections()
+      GetIDsOfNames(riid, rgszNames, cNames, lcid, rgdispid)
+      GetLocation()
+      GetName(Flag)
+      GetTypeInfo(itinfo, lcid, pptinfo)
+      GetTypeInfoCount(pctinfo)
+      Id()   [PROPERTY-PUT]
+      Invoke(dispidMember, riid, lcid, wFlags, pdispparams, pvarResult, pexcepinfo, puArgErr)
+      Label()   [PROPERTY-PUT]
+      Orientation()   [PROPERTY-PUTREF]
+      Orientation()   [PROPERTY-PUT]
+      Parent()   [PROPERTY-PUT]
+      QueryInterface(riid, ppvObj)
+      Refdes()   [PROPERTY-PUTREF]
+      Refdes()   [PROPERTY-PUT]
+      Release()
+      Scale()   [PROPERTY-PUTREF]
+      Scale()   [PROPERTY-PUT]
+      Selected()   [PROPERTY-PUTREF]
+      SetLocation(X, Y)
+      SymbolBlock()   [PROPERTY-PUT]
+      Type()   [PROPERTY-PUT]
+      UID()   [PROPERTY-PUT]
+      _SetSelected(Flag)
+
+### IVdLabel  [DISPATCH]  ?
+    methods=39  properties=0  impl=1
+    methods:
+      AddRef()
+      Application()   [PROPERTY-PUT]
+      Color()   [PROPERTY-PUTREF]
+      Color()   [PROPERTY-PUT]
+      Font()   [PROPERTY-PUTREF]
+      Font()   [PROPERTY-PUT]
+      GetIDsOfNames(riid, rgszNames, cNames, lcid, rgdispid)
+      GetLocation()
+      GetObjectColor()
+      GetTypeInfo(itinfo, lcid, pptinfo)
+      GetTypeInfoCount(pctinfo)
+      Invoke(dispidMember, riid, lcid, wFlags, pdispparams, pvarResult, pexcepinfo, puArgErr)
+      IsColorAutomatic()
+      Orientation()   [PROPERTY-PUTREF]
+      Orientation()   [PROPERTY-PUT]
+      Origin()   [PROPERTY-PUTREF]
+      Origin()   [PROPERTY-PUT]
+      Parent()   [PROPERTY-PUT]
+      QueryInterface(riid, ppvObj)
+      Release()
+      ResolvedName()   [PROPERTY-PUT]
+      Scope()   [PROPERTY-PUTREF]
+      Scope()   [PROPERTY-PUT]
+      Selected()   [PROPERTY-PUTREF]
+      Sense()   [PROPERTY-PUTREF]
+      Sense()   [PROPERTY-PUT]
+      SetAutomaticColor(bAutomatic)
+      SetLocation(X, Y)
+      SetObjectColor(newColor)
+      Size()   [PROPERTY-PUTREF]
+      Size()   [PROPERTY-PUT]
+      TextString()   [PROPERTY-PUTREF]
+      TextString()   [PROPERTY-PUT]
+      Type()   [PROPERTY-PUT]
+      Visible()   [PROPERTY-PUTREF]
+      Visible()   [PROPERTY-PUT]
+      _GetColor()
+      _SetColor(newColor)
+      _SetSelected(Flag)
+
+### IVdAttr  [DISPATCH]  ?
+    methods=51  properties=0  impl=1
+    methods:
+      AddRef()
+      Application()   [PROPERTY-PUT]
+      Child()   [PROPERTY-PUT]
+      Color()   [PROPERTY-PUTREF]
+      Color()   [PROPERTY-PUT]
+      Delete()
+      DeleteInstanceValue()
+      EitherValue()   [PROPERTY-PUTREF]
+      EitherValue()   [PROPERTY-PUT]
+      Font()   [PROPERTY-PUTREF]
+      Font()   [PROPERTY-PUT]
+      GetIDsOfNames(riid, rgszNames, cNames, lcid, rgdispid)
+      GetLocation()
+      GetOatFull(toplevel, pathvalue, full_or_not)
+      GetObjectColor()
+      GetTypeInfo(itinfo, lcid, pptinfo)
+      GetTypeInfoCount(pctinfo)
+      InstanceValue()   [PROPERTY-PUTREF]
+      InstanceValue()   [PROPERTY-PUT]
+      Invoke(dispidMember, riid, lcid, wFlags, pdispparams, pvarResult, pexcepinfo, puArgErr)
+      IsColorAutomatic()
+      Name()   [PROPERTY-PUT]
+      OatValue()   [PROPERTY-PUTREF]
+      OatValue()   [PROPERTY-PUT]
+      Orientation()   [PROPERTY-PUTREF]
+      Orientation()   [PROPERTY-PUT]
+      Origin()   [PROPERTY-PUTREF]
+      Origin()   [PROPERTY-PUT]
+      Parent()   [PROPERTY-PUT]
+      QueryInterface(riid, ppvObj)
+      Release()
+      Selected()   [PROPERTY-PUTREF]
+      SetAutomaticColor(bAutomatic)
+      SetLocation(X, Y)
+      SetObjectColor(newColor)
+      Size()   [PROPERTY-PUTREF]
+      Size()   [PROPERTY-PUT]
+      TextString()   [PROPERTY-PUTREF]
+      TextString()   [PROPERTY-PUT]
+      Type()   [PROPERTY-PUT]
+      Value()   [PROPERTY-PUTREF]
+      Value()   [PROPERTY-PUT]
+      Visible()   [PROPERTY-PUTREF]
+      Visible()   [PROPERTY-PUT]
+      _GetColor()
+      _GetEitherValue()
+      _GetOatValue()
+      _SetColor(newColor)
+      _SetEitherValue(Value)
+      _SetOatValue(Value)
+      _SetSelected(Flag)
+
+### IVdCmpPin  [DISPATCH]  ?
+    methods=25  properties=0  impl=1
+    methods:
+      AddAttribute(String, X, Y, Visibility)
+      AddOat(String)
+      AddRef()
+      Application()   [PROPERTY-PUT]
+      Attributes()   [PROPERTY-PUT]
+      Component()   [PROPERTY-PUT]
+      Connection()   [PROPERTY-PUT]
+      FindAttribute(AttributeName)
+      GetIDsOfNames(riid, rgszNames, cNames, lcid, rgdispid)
+      GetLocation()
+      GetTypeInfo(itinfo, lcid, pptinfo)
+      GetTypeInfoCount(pctinfo)
+      Invoke(dispidMember, riid, lcid, wFlags, pdispparams, pvarResult, pexcepinfo, puArgErr)
+      Number()   [PROPERTY-PUTREF]
+      Number()   [PROPERTY-PUT]
+      Parent()   [PROPERTY-PUT]
+      Pin()   [PROPERTY-PUT]
+      QueryInterface(riid, ppvObj)
+      Release()
+      Selected()   [PROPERTY-PUTREF]
+      Side()   [PROPERTY-PUT]
+      Type()   [PROPERTY-PUT]
+      _GetComp()
+      _GetPin()
+      _SetSelected(Flag)
+
+### IVdPin  [DISPATCH]  ?
+    methods=30  properties=0  impl=1
+    methods:
+      AddAttribute(String, X, Y, Visibility)
+      AddLabel(String, X, Y)
+      AddRef()
+      Application()   [PROPERTY-PUT]
+      Attributes()   [PROPERTY-PUT]
+      Color()   [PROPERTY-PUTREF]
+      Color()   [PROPERTY-PUT]
+      FindAttribute(AttributeName)
+      GetIDsOfNames(riid, rgszNames, cNames, lcid, rgdispid)
+      GetLocation(Flag)
+      GetName(Flag)
+      GetObjectColor()
+      GetTypeInfo(itinfo, lcid, pptinfo)
+      GetTypeInfoCount(pctinfo)
+      Id()   [PROPERTY-PUT]
+      Invoke(dispidMember, riid, lcid, wFlags, pdispparams, pvarResult, pexcepinfo, puArgErr)
+      Label()   [PROPERTY-PUT]
+      Parent()   [PROPERTY-PUT]
+      QueryInterface(riid, ppvObj)
+      Release()
+      Selected()   [PROPERTY-PUTREF]
+      Sense()   [PROPERTY-PUTREF]
+      Sense()   [PROPERTY-PUT]
+      SetLocation(XInterior, YInterior, XBoundary, YBoundary)
+      Side()   [PROPERTY-PUT]
+      Type()   [PROPERTY-PUT]
+      UID()   [PROPERTY-PUT]
+      _GetColor()
+      _SetColor(newColor)
+      _SetSelected(Flag)
+
+### IVdConnection  [DISPATCH]  ?
+    methods=14  properties=0  impl=1
+    methods:
+      AddRef()
+      CompPin()   [PROPERTY-PUT]
+      GetIDsOfNames(riid, rgszNames, cNames, lcid, rgdispid)
+      GetTypeInfo(itinfo, lcid, pptinfo)
+      GetTypeInfoCount(pctinfo)
+      Invoke(dispidMember, riid, lcid, wFlags, pdispparams, pvarResult, pexcepinfo, puArgErr)
+      Net()   [PROPERTY-PUT]
+      QueryInterface(riid, ppvObj)
+      Release()
+      Ripper()   [PROPERTY-PUT]
+      Segment()   [PROPERTY-PUT]
+      _GetCompPin()
+      _GetNet()
+      _GetSegment()
+
+### IVdNet  [DISPATCH]  ?
+    methods=43  properties=0  impl=1
+    methods:
+      AddAttribute(Segment, String, X, Y, Visibility)
+      AddLabel(Segment, String, X, Y)
+      AddOat(String)
+      AddRef()
+      Application()   [PROPERTY-PUT]
+      Attributes()   [PROPERTY-PUT]
+      Color()   [PROPERTY-PUTREF]
+      Color()   [PROPERTY-PUT]
+      Connections(PinNameFilter)
+      FillStyle()   [PROPERTY-PUTREF]
+      FillStyle()   [PROPERTY-PUT]
+      FindAttribute(AttributeName)
+      GetConnectedLabel(Segment)
+      GetConnectedNetName(Segment)
+      GetIDsOfNames(riid, rgszNames, cNames, lcid, rgdispid)
+      GetLabel(Segment)
+      GetObjectColor()
+      GetRippers()
+      GetSegments()
+      GetSignals()
+      GetSingleJointLocs()
+      GetTypeInfo(itinfo, lcid, pptinfo)
+      GetTypeInfoCount(pctinfo)
+      Id()   [PROPERTY-PUT]
+      Invoke(dispidMember, riid, lcid, wFlags, pdispparams, pvarResult, pexcepinfo, puArgErr)
+      IsColorAutomatic()
+      IsSegmentSelected(Segment)
+      LineStyle()   [PROPERTY-PUTREF]
+      LineStyle()   [PROPERTY-PUT]
+      LogicalNetName()   [PROPERTY-PUT]
+      Parent()   [PROPERTY-PUT]
+      QueryInterface(riid, ppvObj)
+      Release()
+      SelectSegment(Segment)
+      SelectSegmentByJointLoc(XCoordinate, YCoordinate, JointType)
+      Selected()   [PROPERTY-PUTREF]
+      SetAutomaticColor(bAutomatic)
+      SetObjectColor(newColor)
+      Type()   [PROPERTY-PUT]
+      UID()   [PROPERTY-PUT]
+      _GetColor()
+      _SetColor(newColor)
+      _SetSelected(Flag)
+
+### IVdSegment  [DISPATCH]  ?
+    methods=15  properties=0  impl=1
+    methods:
+      AddRef()
+      Application()   [PROPERTY-PUT]
+      Attributes()   [PROPERTY-PUT]
+      GetIDsOfNames(riid, rgszNames, cNames, lcid, rgdispid)
+      GetJointType(WhichJoint)
+      GetTypeInfo(itinfo, lcid, pptinfo)
+      GetTypeInfoCount(pctinfo)
+      Invoke(dispidMember, riid, lcid, wFlags, pdispparams, pvarResult, pexcepinfo, puArgErr)
+      IsBus()
+      Location(WhichJoint)
+      Parent()   [PROPERTY-PUT]
+      QueryInterface(riid, ppvObj)
+      Release()
+      SetLocation(WhichJoint, newCoord)
+      Type()   [PROPERTY-PUT]
+
+### IStringList  [DISPATCH]  ?
+    methods=13  properties=0  impl=1
+    methods:
+      AddRef()
+      Append(sItem)
+      Clear()
+      GetCount()
+      GetIDsOfNames(riid, rgszNames, cNames, lcid, rgdispid)
+      GetItem(Index)
+      GetTypeInfo(itinfo, lcid, pptinfo)
+      GetTypeInfoCount(pctinfo)
+      Insert(sItem, Index)
+      Invoke(dispidMember, riid, lcid, wFlags, pdispparams, pvarResult, pexcepinfo, puArgErr)
+      QueryInterface(riid, ppvObj)
+      Release()
+      Remove(Index)
+
+### IRipper  [DISPATCH]  ?
+    methods=10  properties=0  impl=1
+    methods:
+      AddRef()
+      GetConnectedObject(Net)
+      GetConnectedObjects()
+      GetIDsOfNames(riid, rgszNames, cNames, lcid, rgdispid)
+      GetMappedSignal(Net, sSignal)
+      GetTypeInfo(itinfo, lcid, pptinfo)
+      GetTypeInfoCount(pctinfo)
+      Invoke(dispidMember, riid, lcid, wFlags, pdispparams, pvarResult, pexcepinfo, puArgErr)
+      QueryInterface(riid, ppvObj)
+      Release()
+
+### IVdText  [DISPATCH]  ?
+    methods=32  properties=0  impl=1
+    methods:
+      AddRef()
+      Application()   [PROPERTY-PUT]
+      Color()   [PROPERTY-PUTREF]
+      Color()   [PROPERTY-PUT]
+      Font()   [PROPERTY-PUTREF]
+      Font()   [PROPERTY-PUT]
+      GetIDsOfNames(riid, rgszNames, cNames, lcid, rgdispid)
+      GetLocation()
+      GetObjectColor()
+      GetTypeInfo(itinfo, lcid, pptinfo)
+      GetTypeInfoCount(pctinfo)
+      Invoke(dispidMember, riid, lcid, wFlags, pdispparams, pvarResult, pexcepinfo, puArgErr)
+      IsColorAutomatic()
+      Orientation()   [PROPERTY-PUTREF]
+      Orientation()   [PROPERTY-PUT]
+      Origin()   [PROPERTY-PUTREF]
+      Origin()   [PROPERTY-PUT]
+      Parent()   [PROPERTY-PUT]
+      QueryInterface(riid, ppvObj)
+      Release()
+      Selected()   [PROPERTY-PUTREF]
+      SetAutomaticColor(bAutomatic)
+      SetLocation(X, Y)
+      SetObjectColor(newColor)
+      Size()   [PROPERTY-PUTREF]
+      Size()   [PROPERTY-PUT]
+      TextString()   [PROPERTY-PUTREF]
+      TextString()   [PROPERTY-PUT]
+      Type()   [PROPERTY-PUT]
+      _GetColor()
+      _SetColor(newColor)
+      _SetSelected(Flag)
+
+### IVdLine  [DISPATCH]  ?
+    methods=27  properties=0  impl=1
+    methods:
+      AddPoint(NewPoint)
+      AddRef()
+      Application()   [PROPERTY-PUT]
+      Color()   [PROPERTY-PUTREF]
+      Color()   [PROPERTY-PUT]
+      FillStyle()   [PROPERTY-PUTREF]
+      FillStyle()   [PROPERTY-PUT]
+      GetIDsOfNames(riid, rgszNames, cNames, lcid, rgdispid)
+      GetNumPoints()
+      GetObjectColor()
+      GetPoint(PointNumber)
+      GetTypeInfo(itinfo, lcid, pptinfo)
+      GetTypeInfoCount(pctinfo)
+      Invoke(dispidMember, riid, lcid, wFlags, pdispparams, pvarResult, pexcepinfo, puArgErr)
+      IsColorAutomatic()
+      LineStyle()   [PROPERTY-PUTREF]
+      LineStyle()   [PROPERTY-PUT]
+      Parent()   [PROPERTY-PUT]
+      QueryInterface(riid, ppvObj)
+      Release()
+      Selected()   [PROPERTY-PUTREF]
+      SetAutomaticColor(bAutomatic)
+      SetObjectColor(newColor)
+      Type()   [PROPERTY-PUT]
+      _GetColor()
+      _SetColor(newColor)
+      _SetSelected(Flag)
+
+### IMergeData  [DISPATCH]  ?
+    methods=20  properties=0  impl=1
+    methods:
+      AddRef()
+      GetAvailableTargetGlobals()
+      GetAvailableTargetLayers()
+      GetBusContents(sBusName)
+      GetBusNames()
+      GetIDsOfNames(riid, rgszNames, cNames, lcid, rgdispid)
+      GetSourceBusContents(sBusName)
+      GetSourceGlobals()
+      GetSourceLayers()
+      GetTargetBusContents(sBusName)
+      GetTargetGlobal(sSourceGlobal)
+      GetTargetLayer(sSourceLayer)
+      GetTypeInfo(itinfo, lcid, pptinfo)
+      GetTypeInfoCount(pctinfo)
+      Invoke(dispidMember, riid, lcid, wFlags, pdispparams, pvarResult, pexcepinfo, puArgErr)
+      QueryInterface(riid, ppvObj)
+      Release()
+      SetBusContents(sBusName, sBusContents)
+      SetTargetGlobal(sSourceGlobal, sTargetGlobal)
+      SetTargetLayer(sSourceLayer, sTargetLayer)
+
+### IVdSchematicSheetDocument  [DISPATCH]  ?
+    methods=26  properties=0  impl=1
+    methods:
+      AcquireReadWriteRights(AllowRights)
+      Activate()
+      AddRef()
+      Application()   [PROPERTY-PUT]
+      CancelSave(DoNotWarn)
+      Close(SaveChanges, FileName)
+      DataType()   [PROPERTY-PUT]
+      DeleteSheet(DesignName, SheetNumber)
+      ExportMetafile(OutputName)
+      FullName()   [PROPERTY-PUT]
+      GetIDsOfNames(riid, rgszNames, cNames, lcid, rgdispid)
+      GetReadWriteRights()
+      GetTypeInfo(itinfo, lcid, pptinfo)
+      GetTypeInfoCount(pctinfo)
+      GetViews()
+      InsertSheet(DesignName, SheetNumber)
+      Invoke(dispidMember, riid, lcid, wFlags, pdispparams, pvarResult, pexcepinfo, puArgErr)
+      IsAccess(AccessType)
+      IsReadOnly()
+      Name()   [PROPERTY-PUT]
+      Parent()   [PROPERTY-PUT]
+      Print(From, To, Copies)
+      QueryInterface(riid, ppvObj)
+      ReRead(SheetNumber)
+      Release()
+      SetReadOnly(ReadOnlyFlag)
+
+### IVdSchematicSheetDocuments  [DISPATCH]  ?
+    methods=27  properties=0  impl=1
+    methods:
+      Add()
+      AddRef()
+      Application()   [PROPERTY-PUT]
+      Close()
+      CopyBlocksToClipboard(Blocks)
+      CopySheetsToClipboard(Schematic, Sheets, srcPaths)
+      CopyToClipboard(SchematicName, SheetsToCopy, srcPath)
+      Count()   [PROPERTY-PUT]
+      DeleteSheet(SchematicName, SheetNumber)
+      DetermineClipboardContent()
+      GetAvailableSchematics()
+      GetAvailableSheets(Schematic)
+      GetIDsOfNames(riid, rgszNames, cNames, lcid, rgdispid)
+      GetTypeInfo(itinfo, lcid, pptinfo)
+      GetTypeInfoCount(pctinfo)
+      InsertSheet(SchematicName, SheetNumber)
+      Invoke(dispidMember, riid, lcid, wFlags, pdispparams, pvarResult, pexcepinfo, puArgErr)
+      IsSheetsClipboardEmpty()
+      Item(Index)
+      Open(SchematicName, SheetName)
+      Open_Hierarchically(SchematicName, SheetName, HierPath)
+      Parent()   [PROPERTY-PUT]
+      PasteBlocksFromClipboard()
+      PasteFromClipboard(SchematicName, dstPath, SheetsToBeReplaced)
+      PasteSheetsFromClipboard(Schematic, dstPaths, replaceWithSheets)
+      QueryInterface(riid, ppvObj)
+      Release()
+
+### IStringCollection  [DISPATCH]  ?
+    methods=10  properties=0  impl=1
+    methods:
+      AddRef()
+      Count()   [PROPERTY-PUT]
+      GetIDsOfNames(riid, rgszNames, cNames, lcid, rgdispid)
+      GetTypeInfo(itinfo, lcid, pptinfo)
+      GetTypeInfoCount(pctinfo)
+      Invoke(dispidMember, riid, lcid, wFlags, pdispparams, pvarResult, pexcepinfo, puArgErr)
+      Item(Index)
+      QueryInterface(riid, ppvObj)
+      Release()
+      Remove(Index)
+
+### IHDLSourceDocuments  [DISPATCH]  ?
+    methods=7  properties=1  impl=1
+    properties: Count
+    methods:
+      Item(Index)
+      New(DocType)
+      Open(DocumentPath)
+      Remove(Index)
+      RemoveAll()
+      SaveAll()
+      _NewEnum(ppEnum)
+
+### IHDLSourceDocument  [DISPATCH]  ?
+    methods=2  properties=2  impl=1
+    properties: Name, Path
+    methods:
+      BookmarkLine(Index)
+      GotoLine(Index)
+
+### IHTMLSourceDocuments  [DISPATCH]  ?
+    methods=0  properties=1  impl=1
+    properties: Count
+
+### IProjectData  [DISPATCH]  ?
+    methods=47  properties=0  impl=1
+    methods:
+      AddRef()
+      AddiCDBDesign(sTopBlockName)
+      CentralLibraryPath()   [PROPERTY-PUTREF]
+      CentralLibraryPath()   [PROPERTY-PUT]
+      GetBordersFilePath(resolveSoftPrefix)
+      GetBusContentsFilePath(resolveSoftPrefix)
+      GetFlowType()
+      GetFrontEndSnapshot()
+      GetIDsOfNames(riid, rgszNames, cNames, lcid, rgdispid)
+      GetIODProjectData()
+      GetPCBDesignPath(siCDBDesign, resolveSoftPrefix)
+      GetPDBPartitions()
+      GetPinComponentsFilePath(resolveSoftPrefix)
+      GetPinNumbers(sPartitionName, sSymbolName, sPartNumber, lSlot)
+      GetProjectFilePath()
+      GetProjectName()
+      GetProjectPath()
+      GetSearchPathScheme(siCDBDesign)
+      GetSlotsCount(sPartitionName, sSymbolName, sPartNumber)
+      GetSnapshotName()
+      GetSymbolPartitions()
+      GetTypeInfo(itinfo, lcid, pptinfo)
+      GetTypeInfoCount(pctinfo)
+      GetiCDBDesignRootBlock(siCDBDesign)
+      GetiCDBDesignType(siCDBDesign)
+      GetiCDBDesigns()
+      GetiCDBDiscardFilePath(resolveSoftPrefix)
+      GetiCDBServerName()
+      GetiCDBServerPortsFilePath(resolveSoftPrefix)
+      Invoke(dispidMember, riid, lcid, wFlags, pdispparams, pvarResult, pexcepinfo, puArgErr)
+      QueryInterface(riid, ppvObj)
+      Release()
+      RemoveiCDBDesign(sTopBlockName)
+      RenameiCDBDesign(sOldName, sNewName)
+      SetBordersFilePath(sBordersFilePath)
+      SetBusContentsFilePath(sBusContentsFilePath)
+      SetFlowType(sFlowType)
+      SetFrontEndSnapshot(sFrontEndSnapshot)
+      SetPCBDesignPath(sPCBDesignPath, siCDBDesign)
+      SetPinComponentsFilePath(sPinComponentsFilePath)
+      SetSearchPathScheme(sSearchPathScheme, siCDBDesign)
+      SetiCDBDesignRootBlock(siCDBDesignRootBlock, siCDBDesign)
+      SetiCDBDesignType(siCDBDesignType, siCDBDesign)
+      SetiCDBDiscardFilePath(siCDBDiscardFilePath)
+      SetiCDBServerName(siCDBServerName)
+      SetiCDBServerPortsFilePath(siCDBServerPortsFilePath)
+      iCDBDir()   [PROPERTY-PUT]
+
+### ISymbolPartitions  [DISPATCH]  ?
+    methods=15  properties=0  impl=1
+    methods:
+      AddRef()
+      AppendSymbolPartition(sPartition, siCDBDesign)
+      GetIDsOfNames(riid, rgszNames, cNames, lcid, rgdispid)
+      GetSymbolPartition(Index, siCDBDesign)
+      GetSymbolPartitionsArray(siCDBDesign)
+      GetSymbolPartitionsCount(siCDBDesign)
+      GetTypeInfo(itinfo, lcid, pptinfo)
+      GetTypeInfoCount(pctinfo)
+      InsertSymbolPartition(sPartition, Index, siCDBDesign)
+      Invoke(dispidMember, riid, lcid, wFlags, pdispparams, pvarResult, pexcepinfo, puArgErr)
+      QueryInterface(riid, ppvObj)
+      Release()
+      RemoveSymbolPartitionByIndex(Index, siCDBDesign)
+      RemoveSymbolPartitionByName(sPartition, siCDBDesign)
+      SymbolPartitionExists(sPartition, siCDBDesign)
+
+### IPDBPartitions  [DISPATCH]  ?
+    methods=15  properties=0  impl=1
+    methods:
+      AddRef()
+      AppendPDBPartition(sPartition, siCDBDesign)
+      GetIDsOfNames(riid, rgszNames, cNames, lcid, rgdispid)
+      GetPDBPartition(Index, siCDBDesign)
+      GetPDBPartitionsArray(siCDBDesign)
+      GetPDBPartitionsCount(siCDBDesign)
+      GetTypeInfo(itinfo, lcid, pptinfo)
+      GetTypeInfoCount(pctinfo)
+      InsertPDBPartition(sPartition, Index, siCDBDesign)
+      Invoke(dispidMember, riid, lcid, wFlags, pdispparams, pvarResult, pexcepinfo, puArgErr)
+      PDBPartitionExists(sPartition, siCDBDesign)
+      QueryInterface(riid, ppvObj)
+      Release()
+      RemovePDBPartitionByIndex(Index, siCDBDesign)
+      RemovePDBPartitionByName(sPartition, siCDBDesign)
+
+### IODProjectData  [DISPATCH]  ?
+    methods=9  properties=0  impl=1
+    methods:
+      AddRef()
+      GetIDsOfNames(riid, rgszNames, cNames, lcid, rgdispid)
+      GetIODesignerFPGAs(siCDBDesign)
+      GetTypeInfo(itinfo, lcid, pptinfo)
+      GetTypeInfoCount(pctinfo)
+      Invoke(dispidMember, riid, lcid, wFlags, pdispparams, pvarResult, pexcepinfo, puArgErr)
+      QueryInterface(riid, ppvObj)
+      Release()
+      SetIODesignerFPGAs(listOfFPGAs, siCDBDesign)
+
+### ICommandsManager  [DISPATCH]  ?
+    methods=14  properties=0  impl=1
+    methods:
+      AddRef()
+      CommandDisable(CommandName)
+      CommandEnable(CommandName)
+      CommandRemove(CommandName)
+      ExecuteCommand(CommandString)
+      ExecuteMenuCommand(command_name)
+      GetIDsOfNames(riid, rgszNames, cNames, lcid, rgdispid)
+      GetTypeInfo(itinfo, lcid, pptinfo)
+      GetTypeInfoCount(pctinfo)
+      Invoke(dispidMember, riid, lcid, wFlags, pdispparams, pvarResult, pexcepinfo, puArgErr)
+      QueryInterface(riid, ppvObj)
+      RegisterOLECommand(CommandName, CommandDescription, bModifiesData, pDispatch)
+      Release()
+      UnregisterOLECommand(CommandName, ClientDispatch)
+
+### ICommonPropertyManager  [DISPATCH]  ?
+    methods=16  properties=0  impl=1
+    methods:
+      AddRef()
+      CheckPropertyValue(Name, Value)
+      GetCompPropertyNames()
+      GetIDsOfNames(riid, rgszNames, cNames, lcid, rgdispid)
+      GetLoadedFile()
+      GetLoosePropertyNames()
+      GetNetPropertyNames()
+      GetPinPropertyNames()
+      GetPropertyDefinition(Name)
+      GetPropertyNames()
+      GetTransPropertyNames()
+      GetTypeInfo(itinfo, lcid, pptinfo)
+      GetTypeInfoCount(pctinfo)
+      Invoke(dispidMember, riid, lcid, wFlags, pdispparams, pvarResult, pexcepinfo, puArgErr)
+      QueryInterface(riid, ppvObj)
+      Release()
+
+### ICommonPropertyDefinition  [DISPATCH]  ?
+    methods=24  properties=0  impl=1
+    methods:
+      AddRef()
+      AreMultipleEntriesOK()
+      CanBeOverriden()
+      CheckPropertyValue(Value)
+      GetFontColor()
+      GetFontHeight()
+      GetFontName()
+      GetIDsOfNames(riid, rgszNames, cNames, lcid, rgdispid)
+      GetId()
+      GetMaxNumberOfChars()
+      GetMaxNumberOfLines()
+      GetName()
+      GetOrignalRegularExp()
+      GetOwnerTypes()
+      GetRegularExp()
+      GetStorageType()
+      GetTypeInfo(itinfo, lcid, pptinfo)
+      GetTypeInfoCount(pctinfo)
+      Invoke(dispidMember, riid, lcid, wFlags, pdispparams, pvarResult, pexcepinfo, puArgErr)
+      IsNotationInvalid()
+      IsTransferredFromPDB()
+      IsVisible()
+      QueryInterface(riid, ppvObj)
+      Release()
+
+### IFramework  [DISPATCH]  ?
+    methods=8  properties=0  impl=1
+    methods:
+      AddRef()
+      GetIDsOfNames(riid, rgszNames, cNames, lcid, rgdispid)
+      GetTypeInfo(itinfo, lcid, pptinfo)
+      GetTypeInfoCount(pctinfo)
+      Invoke(dispidMember, riid, lcid, wFlags, pdispparams, pvarResult, pexcepinfo, puArgErr)
+      QueryInterface(riid, ppvObj)
+      Release()
+      RunTcl(tclCommand)
+
+### IICTDocuments  [DISPATCH]  ?
+    methods=13  properties=0  impl=1
+    methods:
+      AddRef()
+      Close(ICTName)
+      GetAvailableICTs()
+      GetIDsOfNames(riid, rgszNames, cNames, lcid, rgdispid)
+      GetOpenedCount()
+      GetOpenedICTs()
+      GetOpenedItem(Index)
+      GetTypeInfo(itinfo, lcid, pptinfo)
+      GetTypeInfoCount(pctinfo)
+      Invoke(dispidMember, riid, lcid, wFlags, pdispparams, pvarResult, pexcepinfo, puArgErr)
+      Open(ICTName)
+      QueryInterface(riid, ppvObj)
+      Release()
+
+### IVdICTDocument  [DISPATCH]  ?
+    methods=17  properties=0  impl=1
+    methods:
+      Activate()
+      AddRef()
+      Application()   [PROPERTY-PUT]
+      Close(SaveChanges, FileName)
+      FullName()   [PROPERTY-PUT]
+      GetIDsOfNames(riid, rgszNames, cNames, lcid, rgdispid)
+      GetTypeInfo(itinfo, lcid, pptinfo)
+      GetTypeInfoCount(pctinfo)
+      GetViews()
+      Invoke(dispidMember, riid, lcid, wFlags, pdispparams, pvarResult, pexcepinfo, puArgErr)
+      IsReadOnly()
+      Name()   [PROPERTY-PUT]
+      Parent()   [PROPERTY-PUT]
+      Print(From, To, Copies)
+      QueryInterface(riid, ppvObj)
+      Release()
+      SetReadOnly(ReadOnlyFlag)
+
+### IVdICTViews  [DISPATCH]  ?
+    methods=11  properties=0  impl=1
+    methods:
+      AddRef()
+      Application()   [PROPERTY-PUT]
+      Count()   [PROPERTY-PUT]
+      GetIDsOfNames(riid, rgszNames, cNames, lcid, rgdispid)
+      GetTypeInfo(itinfo, lcid, pptinfo)
+      GetTypeInfoCount(pctinfo)
+      Invoke(dispidMember, riid, lcid, wFlags, pdispparams, pvarResult, pexcepinfo, puArgErr)
+      Item(Index)
+      Parent()   [PROPERTY-PUT]
+      QueryInterface(riid, ppvObj)
+      Release()
+
+### IVdICTView  [DISPATCH]  ?
+    methods=15  properties=0  impl=1
+    methods:
+      AddRef()
+      AddReuseBlock(partName, SymbolName)
+      Block()   [PROPERTY-PUT]
+      GetIDsOfNames(riid, rgszNames, cNames, lcid, rgdispid)
+      GetName(Flag)
+      GetTopLevelDesignName()
+      GetTypeInfo(itinfo, lcid, pptinfo)
+      GetTypeInfoCount(pctinfo)
+      Invoke(dispidMember, riid, lcid, wFlags, pdispparams, pvarResult, pexcepinfo, puArgErr)
+      Query(Flags, Selected)
+      QueryInterface(riid, ppvObj)
+      Release()
+      SelectByName(Name)
+      SetSignalsView()
+      SetSymbolsView()
+
+### IVdICTBlock  [DISPATCH]  ?
+    methods=11  properties=0  impl=1
+    methods:
+      AddInstance(PartitionName, SymbolName)
+      AddNet(Name)
+      AddRef()
+      GetIDsOfNames(riid, rgszNames, cNames, lcid, rgdispid)
+      GetTypeInfo(itinfo, lcid, pptinfo)
+      GetTypeInfoCount(pctinfo)
+      Invoke(dispidMember, riid, lcid, wFlags, pdispparams, pvarResult, pexcepinfo, puArgErr)
+      Parent()   [PROPERTY-PUT]
+      PromoteSymbolNumbers(SelectedOnly, Slot)
+      QueryInterface(riid, ppvObj)
+      Release()
+
+### IVdICTComp  [DISPATCH]  ?
+    methods=15  properties=0  impl=1
+    methods:
+      AddRef()
+      GetAttributeValue(AttrType, Name)
+      GetAttributesNames(AttrType)
+      GetDefName()
+      GetIDsOfNames(riid, rgszNames, cNames, lcid, rgdispid)
+      GetLibraryName()
+      GetTypeInfo(itinfo, lcid, pptinfo)
+      GetTypeInfoCount(pctinfo)
+      Invoke(dispidMember, riid, lcid, wFlags, pdispparams, pvarResult, pexcepinfo, puArgErr)
+      Parent()   [PROPERTY-PUT]
+      QueryInterface(riid, ppvObj)
+      Release()
+      RemAttributeValue(AttrType, Name)
+      SetAttributeValue(AttrType, Name, Value)
+      UID()   [PROPERTY-PUT]
+
+### IVdICTNet  [DISPATCH]  ?
+    methods=8  properties=0  impl=1
+    methods:
+      AddRef()
+      GetIDsOfNames(riid, rgszNames, cNames, lcid, rgdispid)
+      GetTypeInfo(itinfo, lcid, pptinfo)
+      GetTypeInfoCount(pctinfo)
+      Invoke(dispidMember, riid, lcid, wFlags, pdispparams, pvarResult, pexcepinfo, puArgErr)
+      Parent()   [PROPERTY-PUT]
+      QueryInterface(riid, ppvObj)
+      Release()
+
+### IVdAppProtectionProxy  [DISPATCH]  ?
+    methods=169  properties=0  impl=1
+    methods:
+      Activate()
+      ActiveDocument()   [PROPERTY-PUT]
+      ActiveICTView()   [PROPERTY-PUT]
+      ActiveView()   [PROPERTY-PUT]
+      ActiveViewHandle()   [PROPERTY-PUT]
+      AddLibrary(LibraryPath, LibraryAlias, LibraryAccess, Position)
+      AddLibraryAndSaveIni(LibraryPath, LibraryAlias, LibraryAccess, Position)
+      AddRef()
+      Addins()   [PROPERTY-PUT]
+      AnnoDisplayTime(Context, Position, Timestring)
+      AnnoDisplayValue(Context, DesignPath, AnnType, AnnObject, ObjName, ObjValue)
+      AppendOutput(TabName, String)
+      Application()   [PROPERTY-PUT]
+      AttributeCanHaveOatValue(AttributeName)
+      AttributeValueMustBeUpper(AttributeName)
+      Bindings(BindingTable)
+      BrowseForSymbol(OnlyBorders, Title)
+      BusyCursor()   [PROPERTY-PUTREF]
+      BusyCursor()   [PROPERTY-PUT]
+      CheckIfNavigatorAddinsOpen()
+      ClearAllLibraries()
+      ClearEEVMMode()
+      ClientAdvisorFlags()   [PROPERTY-PUTREF]
+      ClientAdvisorFlags()   [PROPERTY-PUT]
+      CloseNavigatorAddins()
+      CloseProject()
+      CnsFileString()   [PROPERTY-PUT]
+      CommandBars()   [PROPERTY-PUT]
+      CommandDisable(CommandName)
+      CommandEnable(CommandName)
+      CommandLineArguments()   [PROPERTY-PUT]
+      CommandRemove(CommandName)
+      CommandsManager()
+      ConvertSchematicToICT(sSchName)
+      ConvertSymbol(sSymbol)
+      Cookies()   [PROPERTY-PUT]
+      CreateToolbar(Name)
+      CurrentProject()   [PROPERTY-PUTREF]
+      CurrentProject()   [PROPERTY-PUT]
+      DataObjExists(Library, Name, Extension, Class)
+      DataObjGetPath(Library, Name, Extension, Class)
+      DeleteBlock(Name)
+      DeleteLibrary(Position)
+      DeleteLibraryAndSaveIni(Position)
+      DeleteSheet(DesignName, SheetNumber)
+      DesignBlocks(Library, Name, SheetNumber, LevelString, RecurseDown)
+      DesignComponents(Library, Name, EndSheet, LevelString, RecurseDown)
+      DesignNets(Library, Name, EndSheet, LevelString, RecurseDown)
+      DesignPaths(Library, Name, LevelString, RecurseDown)
+      DisableSelectionBroadcast()
+      Documents()   [PROPERTY-PUT]
+      EDXEngine()   [PROPERTY-PUT]
+      EnableEEVMMode(eevmDataFile)
+      EnableSelectionBroadcast()
+      ExecuteCommand(CommandString)
+      ExecuteMenuCommand(command_name)
+      ExportForeignDatabase(sPath)
+      ExportSymbol(sSymbolName, sTargetDir)
+      ExtractPCB(sPath, sDetailedWiring)
+      FireCentralLibraryReload()
+      Flows()   [PROPERTY-PUT]
+      FullName()   [PROPERTY-PUT]
+      GetActiveDesign()
+      GetClassDefinitions(CreateIfNotDefined)
+      GetCommonPropertyManager()
+      GetConfigurationProperty(Name)
+      GetDefaultColor(ObjectType)
+      GetFramework()
+      GetICTContents(ICTName, OutputFilePath)
+      GetICTDocuments()
+      GetIDsOfNames(riid, rgszNames, cNames, lcid, rgdispid)
+      GetLastErrorId()
+      GetLastErrorString()
+      GetLibraries()
+      GetPEFlowMode()
+      GetProjectData()
+      GetTypeFromIDispatch(Dispatch)
+      GetTypeInfo(itinfo, lcid, pptinfo)
+      GetTypeInfoCount(pctinfo)
+      Guid()
+      HTMLDocuments()   [PROPERTY-PUT]
+      ImportForeignDatabase(sPath)
+      Initialize(WDIRPath, LicensePath)
+      InsertSheet(DesignName, SheetNumber)
+      Interactive()   [PROPERTY-PUTREF]
+      Interactive()   [PROPERTY-PUT]
+      Invoke(dispidMember, riid, lcid, wFlags, pdispparams, pvarResult, pexcepinfo, puArgErr)
+      IsEEVMModeEnabled()
+      IsLibDeletable(Position)
+      KickViewbase(ForceReload)
+      LMGetSymbolLibPath()
+      LMSetSymbolLibPath(sPath)
+      LaunchSymbolEditor(sSymbolName)
+      LicenseMode()   [PROPERTY-PUT]
+      MakeReusableBlock(ProjectName, SchematicRoot, DestDir, RBName)
+      MoveLibrary(FromPosition, ToPosition)
+      MoveLibraryAndSaveIni(FromPosition, ToPosition)
+      Name()   [PROPERTY-PUT]
+      NewProject(ProjectPath, CentralLibraryPath, ServerName, ProjectTemplatePath)
+      ObjectColor(ObjectType)   [PROPERTY-PUTREF]
+      ObjectColor(ObjectType)   [PROPERTY-PUT]
+      OpenBlocks(BlockType)
+      OpenProject(ProjectPath)
+      OpenURL(URL)
+      OptionLevel()   [PROPERTY-PUT]
+      ParamAddListName(which_param, new_name)
+      ParamGetListNames(which_param)
+      ParamGetMode(Index)
+      ParamGetValue(Index)
+      ParamSetMode(Index, NewValue)
+      ParamSetValue(Index, NewValue)
+      Parent()   [PROPERTY-PUT]
+      PreviewDecal(DecalName)
+      PrimaryDirectory()   [PROPERTY-PUT]
+      PrintProject(DesignName, LevelStrings, PrintSymbols, ShowOrderDialog, PPOFile)
+      ProjMan()   [PROPERTY-PUT]
+      Project()   [PROPERTY-PUT]
+      PushPath(Top, HierPath, SheetNumber)
+      Query(Flags, Selected)
+      QueryBlocks(BlockType, Library)
+      QueryInterface(riid, ppvObj)
+      QueryPages(Name)
+      QueueSelectEvents()   [PROPERTY-PUTREF]
+      QueueSelectEvents()   [PROPERTY-PUT]
+      Quit()
+      ReadIni(Inifilename)
+      RegisterOLECommand(CommandName, CommandDescription, bModifiesData, pDispatch)
+      Release()
+      RemoveProjectSettingTab(TabIndicator)
+      SaveIni()
+      SchematicSheetDocuments()
+      SelectComponent(sSchName, sSheetName, sCompUID)
+      SelectNet(sSchName, sSheetName, sNetUID)
+      SelectPath(FileName, HierPath, SheetNumber, Type, AddSelected, SearchBus)
+      SelectPathCompPin(FileName, HierPath, SheetNumber, PinNumber, SelectType)
+      SetButtonBitmap(CommandID, BitmapFilePath)
+      SetButtonResourceDLL(CommandID, DllFilePath, resID)
+      SetClientAdvisor(Advisor, Flags)
+      SetConfigurationProperty(Name, val)
+      SetDefaultColor(ObjectType, Color)
+      SetEnvVariable(pName, pValue)
+      SetGenericStatusIndicatorState(eIndicatorColor, sToolTipText)
+      SetLibAddComp(DirPath)
+      SetLibFileNew(DirPath)
+      SetLibFileOpen(DirPath)
+      SetRedraw(Redraw)
+      SetViewAnalogFlag(state)
+      SheetsEditMode()   [PROPERTY-PUTREF]
+      SheetsEditMode()   [PROPERTY-PUT]
+      ShellCmd()   [PROPERTY-PUT]
+      SilentMode()   [PROPERTY-PUTREF]
+      SilentMode()   [PROPERTY-PUT]
+      SourceDocuments()   [PROPERTY-PUT]
+      StartMigration(ProjectPath, CentralLibPath)
+      StatusBarText()   [PROPERTY-PUTREF]
+      StatusBarText()   [PROPERTY-PUT]
+      SynchronizesViewBase()   [PROPERTY-PUTREF]
+      SynchronizesViewBase()   [PROPERTY-PUT]
+      TextViews()
+      ToolbarAction(Handle, Msg, wParam, lParam)
+      UnloadClassDefinitions()
+      UnregisterOLECommand(CommandName, ClientDispatch)
+      UpdateMenuBar(menuBarParentWnd, hMenu)
+      UserControl()
+      Validate(_lLicenseToken)
+      Version()   [PROPERTY-PUT]
+      ViewBaseSession()   [PROPERTY-PUT]
+      Visible()   [PROPERTY-PUTREF]
+      Visible()   [PROPERTY-PUT]
+
+### IAddinInfo  [DISPATCH]  ?
+    methods=27  properties=0  impl=1
+    methods:
+      AddRef()
+      GetIDsOfNames(riid, rgszNames, cNames, lcid, rgdispid)
+      GetTypeInfo(itinfo, lcid, pptinfo)
+      GetTypeInfoCount(pctinfo)
+      InitiallyDisabled()   [PROPERTY-PUTREF]
+      InitiallyDisabled()   [PROPERTY-PUT]
+      InitiallyVisible()   [PROPERTY-PUTREF]
+      InitiallyVisible()   [PROPERTY-PUT]
+      Invoke(dispidMember, riid, lcid, wFlags, pdispparams, pvarResult, pexcepinfo, puArgErr)
+      LicenseFeature()   [PROPERTY-PUTREF]
+      LicenseFeature()   [PROPERTY-PUT]
+      Name()   [PROPERTY-PUTREF]
+      Name()   [PROPERTY-PUT]
+      Placement()   [PROPERTY-PUTREF]
+      Placement()   [PROPERTY-PUT]
+      ProgId()   [PROPERTY-PUTREF]
+      ProgId()   [PROPERTY-PUT]
+      QueryInterface(riid, ppvObj)
+      Release()
+      RuntimeCreateDecision()   [PROPERTY-PUTREF]
+      RuntimeCreateDecision()   [PROPERTY-PUT]
+      Script()   [PROPERTY-PUTREF]
+      Script()   [PROPERTY-PUT]
+      ShortCutKey()   [PROPERTY-PUTREF]
+      ShortCutKey()   [PROPERTY-PUT]
+      ToolbarButton()   [PROPERTY-PUTREF]
+      ToolbarButton()   [PROPERTY-PUT]
+
+### IPredicate  [DISPATCH]  ?
+    methods=7  properties=0  impl=1
+    methods:
+      AddRef()
+      GetIDsOfNames(riid, rgszNames, cNames, lcid, rgdispid)
+      GetTypeInfo(itinfo, lcid, pptinfo)
+      GetTypeInfoCount(pctinfo)
+      Invoke(dispidMember, riid, lcid, wFlags, pdispparams, pvarResult, pexcepinfo, puArgErr)
+      QueryInterface(riid, ppvObj)
+      Release()
+
+### IVdViewEvents  [DISPATCH]  ?
+    methods=3  properties=0  impl=1
+    methods:
+      OnActivate()
+      OnModify(View, Block)
+      OnSelect(View)
+
+### IVdAppEvents  [DISPATCH]  ?
+    methods=53  properties=0  impl=1
+    methods:
+      ActivateView()
+      ActivateView2(View)
+      AfterDocumentOpened(DocumentType, LibraryAlias, Name)
+      AfterDocumentSave(Doc)
+      AfterFAFinished()
+      AfterPrintProject()
+      AfterSaveAndCheck()
+      AfterSheetReRead(Block)
+      AfterSheetRead(DocumentType, LibraryAlias, Name)
+      BatchAttributesAdded(comp, AttributeListString)
+      BeforeDocumentOpened(DocumentType, LibraryAlias, Name)
+      BeforeDocumentSave(Doc)
+      BeforeFAStarted()
+      BeforePrintProject(FileList)
+      BeforeProjectChanged()
+      BeforeProjectModified()
+      BeforeSaveAndCheck(Reserved)
+      BlockLocked(Block)
+      BlockModified(Block)
+      CentralLibraryChanged(sNewLMCDir)
+      ClearEEVMMode()
+      Close()
+      ConstraintsModeChanged(enabled)
+      CreateICTObject(ReasonFlag, ObjectType, Block, Object)
+      CreateObject(ReasonFlag, ObjectType, Block, Object)
+      DeactivateView()
+      DeactivateView2(View)
+      Delete()
+      DocumentClose(Doc)
+      DocumentModified()
+      DocumentSave()
+      DocumentSaveAs(Library, Name)
+      ITCCommand(Command, CommandString)
+      LockRequest(Block, Success)
+      MouseMoved(Flags, X, Y)
+      OatAdded()
+      Paint()
+      PaintRegion(View, LowerLeftx, LowerLefty, UpperRightx, UpperRighty)
+      PrintFile(BlockName, Path, TopBlock)
+      ProjectChanged(ProjectData)
+      ProjectClosed()
+      ProjectModified(NewProject)
+      ReuseBlockAdded(comp)
+      SearchPathSchemeChanged()
+      Select(SelectionType, Block)
+      SettingsChanged()
+      Shutdown()
+      SourceDocumentSave(DocumentName)
+      SourceFileModified(FileName)
+      Startup()
+      SymbolPreviewed(SymbolBlock)
+      SymbolUpdateStarted()
+      Unlock(Block)
+
+### IVdICTAttr  [DISPATCH]  ?
+    methods=8  properties=0  impl=1
+    methods:
+      AddRef()
+      GetIDsOfNames(riid, rgszNames, cNames, lcid, rgdispid)
+      GetTypeInfo(itinfo, lcid, pptinfo)
+      GetTypeInfoCount(pctinfo)
+      Invoke(dispidMember, riid, lcid, wFlags, pdispparams, pvarResult, pexcepinfo, puArgErr)
+      Parent()   [PROPERTY-PUT]
+      QueryInterface(riid, ppvObj)
+      Release()
+
+### IVdLibrary  [DISPATCH]  ?
+    methods=13  properties=0  impl=1
+    methods:
+      AddRef()
+      Alias()   [PROPERTY-PUTREF]
+      Alias()   [PROPERTY-PUT]
+      GetIDsOfNames(riid, rgszNames, cNames, lcid, rgdispid)
+      GetTypeInfo(itinfo, lcid, pptinfo)
+      GetTypeInfoCount(pctinfo)
+      Invoke(dispidMember, riid, lcid, wFlags, pdispparams, pvarResult, pexcepinfo, puArgErr)
+      Path()   [PROPERTY-PUTREF]
+      Path()   [PROPERTY-PUT]
+      QueryInterface(riid, ppvObj)
+      Release()
+      Type()   [PROPERTY-PUTREF]
+      Type()   [PROPERTY-PUT]
+
+### IAutoString  [DISPATCH]  ?
+    methods=10  properties=0  impl=1
+    methods:
+      AddRef()
+      GetIDsOfNames(riid, rgszNames, cNames, lcid, rgdispid)
+      GetTypeInfo(itinfo, lcid, pptinfo)
+      GetTypeInfoCount(pctinfo)
+      Invoke(dispidMember, riid, lcid, wFlags, pdispparams, pvarResult, pexcepinfo, puArgErr)
+      QueryInterface(riid, ppvObj)
+      Release()
+      Text()   [PROPERTY-PUTREF]
+      Text()   [PROPERTY-PUT]
+      _Text()   [PROPERTY-PUT]
+
+### IProjectManagerEventSink  [DISPATCH]  ?
+    methods=0  properties=0  impl=1
+
+### IHTMLSourceDocument  [DISPATCH]  ?
+    methods=0  properties=3  impl=1
+    properties: Document, Name, URL
+
+----------------------------------------------------------------------
+INDEX: every member whose name starts with 'Add'
+----------------------------------------------------------------------
+  IVdObjs                AddRef()
+  IVdApp                 AddRef()
+  IVdApp                 Addins()   [PROPERTY-PUT]
+  IVdApp                 AddLibrary(LibraryPath, LibraryAlias, LibraryAccess, Position)
+  IVdApp                 AddLibraryAndSaveIni(LibraryPath, LibraryAlias, LibraryAccess, Position)
+  IVdApp                 AddAddin(pAddinInfo)
+  IVdDocs                AddRef()
+  IVdDocs                Add()
+  IVdDoc                 AddRef()
+  IVdViews               AddRef()
+  IVdView                AddRef()
+  IVdView                AddAttributeMoveMode(AttributeString, Visibility)
+  IVdView                AddReuseBlock(partName, SymbolName)
+  IVdView                AddMissingPorts()
+  IViewport              AddRef()
+  IVdRect                AddRef()
+  IColor                 AddRef()
+  IVdBlock               AddRef()
+  IVdBlock               AddArc(X1, Y1, X2, Y2, X3, Y3)
+  IVdBlock               AddBox(LowerLeftx, LowerLefty, UpperRightx, UpperRighty)
+  IVdBlock               AddCircle(Centerx, Centery, Radius)
+  IVdBlock               AddComponent(SymbolName, Locationx, Locationy)
+  IVdBlock               AddFub(FubName, LowerLeftx, LowerLefty, UpperRightx, UpperRighty)
+  IVdBlock               AddNet(Locationx1, Locationy1, Locationx2, Locationy2, CompPin1, CompPin2, BusOrWire)
+  IVdBlock               AddPin(X, Y)
+  IVdBlock               AddText(TextString, X, Y)
+  IVdBlock               AddAttribute(String, X, Y, Visibility)
+  IVdBlock               AddComponentMoveMode(SymbolName, InitialLocationX, InitialLocationY)
+  IVdBlock               AddBatchAttributes(AttributeListString)
+  IVdBlock               AddLine(Pt1, Pt2)
+  IVdBlock               AddComponentMoveModeEx(SymbolName, InitialLocationX, InitialLocationY, bAddNets, bLabelNets)
+  IVdBlock               AddPinAtLocation(X1, Y1, X2, Y2)
+  IVdBlock               AddSymbolInstance(SymbolPartitionName, SymbolName, Locationx, Locationy)
+  IVdBlock               AddPartInstance(PartPartitionName, DeviceName, SymbolName, Locationx, Locationy)
+  IVdBlock               AddReuseBlockInstance(ReuseType, RBSymbolName, ModifierType, ModifierValue, bAddNets, bLabelNets, Locationx, Locationy)
+  IVdBlock               AddReuseBlockInstanceEx(ReuseType, RBSymbolName, pMergeData, ModifierType, ModifierValue, bAddNets, bLabelNets, Locationx, Locationy)
+  IVdBlock               AddLine2(X1, Y1, X2, Y2)
+  IVdPoint               AddRef()
+  IVdArc                 AddRef()
+  IVdBox                 AddRef()
+  IVdCircle              AddRef()
+  IVdComp                AddRef()
+  IVdComp                AddAttribute(String, X, Y, Visibility)
+  IVdComp                AddLabel(String, X, Y)
+  IVdComp                AddOat(String)
+  IVdComp                AddBatchAttributes(AttributeListSting)
+  IVdComp                AddBatchOats(AttributeListSting)
+  IVdLabel               AddRef()
+  IVdAttr                AddRef()
+  IVdCmpPin              AddRef()
+  IVdCmpPin              AddAttribute(String, X, Y, Visibility)
+  IVdCmpPin              AddOat(String)
+  IVdPin                 AddRef()
+  IVdPin                 AddAttribute(String, X, Y, Visibility)
+  IVdPin                 AddLabel(String, X, Y)
+  IVdConnection          AddRef()
+  IVdNet                 AddRef()
+  IVdNet                 AddOat(String)
+  IVdNet                 AddAttribute(Segment, String, X, Y, Visibility)
+  IVdNet                 AddLabel(Segment, String, X, Y)
+  IVdSegment             AddRef()
+  IStringList            AddRef()
+  IRipper                AddRef()
+  IVdText                AddRef()
+  IVdLine                AddRef()
+  IVdLine                AddPoint(NewPoint)
+  IMergeData             AddRef()
+  IVdSchematicSheetDocument AddRef()
+  IVdSchematicSheetDocuments AddRef()
+  IVdSchematicSheetDocuments Add()
+  IStringCollection      AddRef()
+  IProjectData           AddRef()
+  IProjectData           AddiCDBDesign(sTopBlockName)
+  ISymbolPartitions      AddRef()
+  IPDBPartitions         AddRef()
+  IODProjectData         AddRef()
+  ICommandsManager       AddRef()
+  ICommonPropertyManager AddRef()
+  ICommonPropertyDefinition AddRef()
+  IFramework             AddRef()
+  IICTDocuments          AddRef()
+  IVdICTDocument         AddRef()
+  IVdICTViews            AddRef()
+  IVdICTView             AddRef()
+  IVdICTView             AddReuseBlock(partName, SymbolName)
+  IVdICTBlock            AddRef()
+  IVdICTBlock            AddInstance(PartitionName, SymbolName)
+  IVdICTBlock            AddNet(Name)
+  IVdICTComp             AddRef()
+  IVdICTNet              AddRef()
+  IVdAppProtectionProxy  AddRef()
+  IVdAppProtectionProxy  Addins()   [PROPERTY-PUT]
+  IVdAppProtectionProxy  AddLibrary(LibraryPath, LibraryAlias, LibraryAccess, Position)
+  IVdAppProtectionProxy  AddLibraryAndSaveIni(LibraryPath, LibraryAlias, LibraryAccess, Position)
+  IAddinInfo             AddRef()
+  IPredicate             AddRef()
+  IVdICTAttr             AddRef()
+  IVdLibrary             AddRef()
+  IAutoString            AddRef()
+
+======================================================================
+ done

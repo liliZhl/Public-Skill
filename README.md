@@ -10,6 +10,7 @@
 | `windows-lan-remote-access` | 排查并修复 Windows 局域网内「远程控制另一台电脑」失败的问题：ping 单向不通、RDP 凭据不工作、域账号(NetBIOS/UPN)登录名格式、主机侧远程桌面授权与防火墙、RDP 证书/资源重定向警告、无外网环境下第三方远控选型、EDA 类节点锁定许可与远程会话冲突 |
 | `github-control` | 在本机直接管理 GitHub：gh CLI 授权（设备码方向说明）、git 身份与凭据配置、仓库增删改、提交推送、Issue 与 PR、Actions 日志排查；附环境自检、**转公开前的敏感信息体检**、**已推送内容的历史改写补救**与技能双仓同步工具，以及 Windows 平台故障绕行（PATH 未注入、`refs/remotes` 写入被丢弃、沙箱内 clone 不落地） |
 | `ee-icdb-export` | 从 Mentor/Siemens Expedition EE 工程里直接导出 BOM 与引脚级网表（不打开 GUI、不用 COM、不用 32 位解释器，仅标准库），并把同一工程两个版本的差异做成自包含 HTML 报告与多工作表 Excel 报表，用于 ECO 变更核对 |
+| `dxdesigner-automation` | 用脚本驱动 Mentor/Siemens DxDesigner 绘制原理图：按**料号**从中央库直接调用元器件（不复制现成器件）、连线、写器件属性，并以导出的引脚级网表验收连接是否成立；含新建工程失败的根因分析与只读环境探查 |
 
 ## 占位符对照表（重要）
 
@@ -41,7 +42,7 @@
 
 ### 项目 / 设计数据类
 
-`ee-icdb-export` 的文档与示例里，来自真实工程的数据一律换成下列占位符：
+`ee-icdb-export` 与 `dxdesigner-automation` 的文档与示例里，来自真实工程的数据一律换成下列占位符：
 
 | 占位符 | 含义 | 参考替换值 |
 |---|---|---|
@@ -50,9 +51,11 @@
 | `<PROJECT_ID>` | 工程目录全名（含版本号） | `PRJ-0001` |
 | `<DESIGN>` | 设计文件名主体（`<DESIGN>.prj`） | `MyBoard` |
 | `<ROOT_BLOCK>` | 顶层原理图块名 | `TopBlock` |
-| `<COMPANY>` | 公司名（出现在料号或元件属性里） | `ACME` |
+| `<COMPANY>` | 公司名。**两种用法**：出现在料号或元件属性里；也作为中央库的**符号库分区名**（如 `AddPartInstance("<COMPANY>", …)` 的第 1 参） | `ACME` |
 | `<PART_NO>` | 物料号 | `PN-00001` |
-| `<PART_NAME>` | 器件规格名 | `CAP0603` |
+| `<PART_NAME>` | 器件规格名 | `SamplePart` |
+| `<SYMBOL>` | 中央库中的符号名 | `res01` |
+| `<TEST_PROJECT>` | 测试用工程目录名 | `TEST_PRJ` |
 | `<NET_EN>` `<NET_GPIO>` `<NET_CTRL>` `<NET_RAIL>` | 网络名 | `EN_SIGNAL` |
 | `<AUTO_NET>` | EDA 自动生成的网络名 | `$1N00000` |
 | `<Q1>` `<R1>`…`<R6>` `<C1>` `<U1>` `<U2>` `<D1>` | 位号（元件在板上的位置） | `U1`、`R1`… |
@@ -97,6 +100,21 @@
 │       ├── diff-design.md         # 比对的设计决策与实测记录
 │       ├── icdb-data-format.md    # 12 张表的列结构、属性号映射
 │       └── troubleshooting.md     # 报错原文 → 根因 → 处置
+├── dxdesigner-automation/
+│   ├── SKILL.md
+│   ├── references/
+│   │   ├── electrical-connectivity.md  # 放件配方、属性写入、网表验收
+│   │   ├── live-verification.md        # 实机能力验证记录
+│   │   ├── new-project-failure.md      # 新建工程失败的取证与拒绝条件
+│   │   └── typelib-api.txt             # COM 类型库接口清单（dump）
+│   └── scripts/                        # 7 个脚本，后期绑定 COM
+│       ├── dxd.py                      # 核心封装：放件 / 连线 / 属性 / 查找
+│       ├── demo_draw.py                # 画一张电气合法的示意原理图
+│       ├── verify_connectivity.py      # 网表验收（五档判决）
+│       ├── new_project.py              # 复制现成工程来新建工程
+│       ├── probe.py                    # 只读连通性探测
+│       ├── find_msg.py                 # 报错原文 → 定位弹窗模块
+│       └── dump_typelib.py             # 导出类型库接口清单
 ├── github-control/
 │   ├── SKILL.md
 │   ├── README.md
@@ -117,7 +135,7 @@
 复制到 Agent 的用户级技能目录（以 WorkBuddy 为例）：
 
 ```powershell
-Copy-Item -Recurse .\eda-host-control, .\ee-icdb-export, .\github-control, .\windows-lan-remote-access "$env:USERPROFILE\.workbuddy\skills\"
+Copy-Item -Recurse .\eda-host-control, .\ee-icdb-export, .\github-control, .\windows-lan-remote-access, .\dxdesigner-automation "$env:USERPROFILE\.workbuddy\skills\"
 ```
 
 ## 使用前提
@@ -156,6 +174,22 @@ python scripts/gh_env.py
 
 ```
 python scripts/icdb_export.py --doctor
+```
+
+### `dxdesigner-automation`
+
+- Mentor/Siemens Expedition EE 7.9.x（含 DxDesigner / ViewDraw）
+- Windows，且**必须是交互式桌面会话** —— COM 自动化在无桌面的会话里不可用
+- Python + `pywin32`（`win32com`），且**必须后期绑定**（`win32com.client.dynamic.Dispatch`）
+- 需要有效的本机许可（node-locked 或 floating 均可）
+- 脚本以**本技能根目录**为工作目录运行：文档里的 `scripts/xxx.py` 指本技能，
+  `../ee-icdb-export/scripts/icdb_export.py` 指同一批技能里的网表导出器
+- 网表验收依赖 `ee-icdb-export` 先导出 `database.sym` / `database.ppn` 等表
+
+先跑只读探测确认环境可用：
+
+```
+python scripts/probe.py
 ```
 
 ## 说明

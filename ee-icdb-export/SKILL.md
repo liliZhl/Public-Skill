@@ -243,9 +243,11 @@ double-click).
    Export in place.
 6. **Close EE first.** The database is single-writer.
 7. **The export rewrites `icdb.dat`** (session bookkeeping: host, user, access
-   stamp). Size stays stable, exported data is byte-for-byte reproducible, the
-   schematic content is untouched — but do not be alarmed when the hash
-   changes. The script reports both hashes.
+   stamp). Size stays stable **for unchanged content**, and the exported data is
+   byte-for-byte reproducible — but do not be alarmed when the hash changes.
+   The script reports both hashes. Note the size *does* change when the design
+   itself changed in between (measured 3 688 256 → 3 214 032 bytes across an
+   editing session) — that is content, not bookkeeping.
 
 ## Files
 
